@@ -1,6 +1,10 @@
+#include <queue>
+
 class Pipeline {
 public:
-        getInstance();
+    void addTicks();
+    void addTicks(int);
+    Pipeline& getInstance();
 private:
     // pc - program counter
     // TODO:: fill parameters and types and may be replace something in public
@@ -16,5 +20,8 @@ private:
     Pipeline(Pipeline const&) = delete;
     Pipeline& operator= (Pipeline const&) = delete;
 
-    Pipeline *instance;
+    int ticks;
+    // TODO:: change according to real data
+    const int defaultTicksAddCount = 50;
+    std::queue<Task> tasks;
 }
