@@ -6,13 +6,13 @@ public:
     void addTicks(int);
     Pipeline& getInstance();
 private:
-    // pc - program counter
     // TODO:: fill parameters and types and may be replace something in public
+    // pc - program counter
     void fetch(int pc);
-    void decode();
-    void loadOp();
-    void execute();
-    void storeRes();
+    void decode(/*?*/);
+    void loadOpcode(/*?*/);
+    void execute(/*?*/);
+    void storeRes(/*?*/);
 
     // We have a singleton
     void Pipeline();

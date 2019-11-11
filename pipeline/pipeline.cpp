@@ -18,3 +18,25 @@ void Pipeline::addTicks() {
 void Pipeline::addTicks(const int count) {
     ticks += count;
 }
+
+void Pipeline::fetch(int pc) {
+    // TODO:: Get instruction from memory[pc]
+    // May be we need class Instruction
+}
+
+void Pipeline::decode() {
+    // TODO:: translate received instruction to ... hz
+}
+
+void Pipeline::loadOpcode() {
+    // TODO:: find opcode in opcode table
+    // Yes, we need separated fucntion for this for integrity
+}
+
+void Pipeline::execute() {
+    // TODO:: refresh everything: ticks, regs, mem
+}
+
+void Pipeline::storeRes() {
+    // TODO:: Write in memory
+}
