@@ -12,11 +12,11 @@ Pipeline::Pipeline():ticks(0), tasks(std::queue<Task>(0)) {
 }
 
 void Pipeline::addTicks() {
-    ticks += defaultTicksAddCount;
+    this.ticks += defaultTicksAddCount;
 }
 
 void Pipeline::addTicks(const int count) {
-    ticks += count;
+    this.ticks += count;
 }
 
 void Pipeline::fetch(int pc) {
