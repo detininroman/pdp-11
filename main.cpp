@@ -1,6 +1,8 @@
 #include <SFML/Graphics.hpp>
-#include "Screen.h"
-#include "Button.h"
+
+#include "gui/Screen.hpp"
+#include "gui/Button.hpp"
+#include "gui/GUIObject.hpp"
 
 
 int main() {
