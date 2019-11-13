@@ -1,6 +1,7 @@
 #pragma once
 
 #include <queue>
+#include "../cpu/cpu.h"
 
 class Pipeline {
 public:
@@ -16,14 +17,15 @@ private:
     void execute(/*?*/);
     void storeRes(/*?*/);
 
-    // We have a singleton
+    // We have a singleton // <----- Should consider Emulator class, which controls pipeline state, steps and interacts with GUI
     void Pipeline();
     void ~Pipeline();
     Pipeline(Pipeline const&) = delete;
     Pipeline& operator= (Pipeline const&) = delete;
 
-    int ticks;
+    int ticks; // <----- Should also be moved into External class, as we need to externaly control emulator state
     // TODO:: change according to real data
     const int defaultTicksAddCount = 50;
     std::queue<Task> tasks;
+    CPU CPU;
 }
