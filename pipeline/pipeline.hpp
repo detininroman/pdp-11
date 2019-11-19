@@ -4,9 +4,9 @@
 
 class Pipeline {
 public:
-    void addTicks();
-    void addTicks(int);
-    Pipeline& getInstance();
+    Pipeline &getInstance();
+    int getCurrentState();
+    void makeStep(); // call this from CPU to perform one operation
 private:
     // TODO:: fill parameters and types and may be replace something in public
     // pc - program counter
@@ -15,16 +15,10 @@ private:
     void loadOpcode(/*?*/);
     void execute(/*?*/);
     void storeRes(/*?*/);
+    int stage; //Fetch/Decode/Execute/WriteBack
 
-    // We have a singleton // <----- Should consider Emulator class, which controls pipeline state, steps and interacts with GUI
-    void Pipeline();
-    void ~Pipeline();
     Pipeline(Pipeline const&) = delete;
     Pipeline& operator= (Pipeline const&) = delete;
-
-    int ticks; // <----- Should also be moved into External class, as we need to externaly control emulator state
-    // TODO:: change according to real data
-    const int defaultTicksAddCount = 50;
     std::queue<Task> tasks;
-    CPU CPU;
-}
+};
+
