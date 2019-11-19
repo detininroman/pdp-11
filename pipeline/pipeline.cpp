@@ -1,5 +1,4 @@
 #include "pipeline"
-
 #include <queue>
 
 Pipeline& Pipeline::getInstance() {

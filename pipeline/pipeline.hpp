@@ -1,7 +1,6 @@
 #pragma once
-
-#include <queue>
 #include "../cpu/cpu.h"
+#include <queue>
 
 class Pipeline {
 public:
