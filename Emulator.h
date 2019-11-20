@@ -1,19 +1,20 @@
 #pragma once
-#include "../memory/memory.h"
-#include "../pipeline/pipeline.hpp"
 
-class CPU{
+#include "memory/memory.h"
+#include "pipeline/pipeline.h"
+
+class Emulator {
 public:
-    CPU(); // <---- can run this as singletone
+    Emulator(); // <---- can run this as a singletone
     void addTicks();
+
     void addTicks(int);
+
+    uint8_t getVideo() const;
     // INSTRUCTIONS
 private:
     int ticks;
     // TODO:: change according to real data
     const int defaultTicksAddCount = 50;
     Pipeline line;
-    uint16_t *reg[7];
-    RAM RAM;
-    VIDEO VRAM;
 };
