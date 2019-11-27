@@ -1,5 +1,5 @@
 CXX = g++
-TARGET = pdp
+TARGET = pdp.bin
 CXX_FLAGS = -Wall -pedantic -std=c++11 -c
 SFML_FLAGS = -lsfml-graphics -lsfml-window -lsfml-system
 OBJECTS = main.o
