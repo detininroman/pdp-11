@@ -1,25 +1,37 @@
 #include "pipeline"
-
 #include <queue>
 
-Pipeline& Pipeline::getInstance() {
-    static Pipeline p;
-    return p;
+/*
+//fetch
+input: fd
+output: string
+// decode
+tokenizing
+// loadOpcode
+input: tokens
+output: instruction + operands
+//execute
+input: instruction,operands[]
+output: temp_result
+//store_res
+///store
+*/
+
+
+Pipeline &Pipeline::getInstance() {
+
 }
 
-Pipeline::Pipeline():ticks(0), tasks(std::queue<Task>(0)) {
+Pipeline::Pipeline() : ticks(0), tasks(std::queue<Task>(0)) {
     // Some initializations
 }
 
-void Pipeline::addTicks() {
-    this.ticks += defaultTicksAddCount;
+void Pipeline::initTable() {
+    instructionTable["mov"] = commandDecomposed(mov, 2, 1);
+    //add more instructions
 }
 
-void Pipeline::addTicks(const int count) {
-    this.ticks += count;
-}
-
-void Pipeline::fetch(int pc) {
+void Pipeline::fetch() {
     // TODO:: Get instruction from memory[pc]
     // May be we need class Instruction
 }
@@ -30,7 +42,6 @@ void Pipeline::decode() {
 
 void Pipeline::loadOpcode() {
     // TODO:: find opcode in opcode table
-    // Yes, we need separated fucntion for this for integrity
 }
 
 void Pipeline::execute() {
