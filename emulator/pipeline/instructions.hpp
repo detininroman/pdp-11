@@ -3,7 +3,6 @@
 #include <cstdint>
 #include <functional>
 
-
 struct instrPackage {
     uint8_t **regs8;
     uint8_t *source8;
@@ -30,7 +29,7 @@ struct commandDecomposed {
     int nTicks;
 };
 
-bool mov(instrPackage data) {
+bool mov_(instrPackage data) {
     *data.dest8 = *data.source8;
     *data.dest16 = *data.source16;
     return true;
