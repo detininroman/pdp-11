@@ -1,1 +1,2 @@
-//TODO:: implement
+all:
+	 g++ main.cpp emulator.cpp memory/memory.cpp 
