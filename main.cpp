@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 
+//#include "emulator/emulator.hpp"
 #include "gui/Screen.hpp"
 #include "gui/Button.hpp"
 #include "gui/GUIObject.hpp"
@@ -13,6 +14,7 @@ int main() {
 
     Screen screen(&window);
     Button button(&window, font);
+//    Emulator::instance().initROM("emulator/rom.raw");
 
 
     while (window.isOpen()) {

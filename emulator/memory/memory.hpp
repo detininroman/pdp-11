@@ -1,8 +1,9 @@
 #pragma once
 
-#include "../params.h"
-#include <cstdio>
+#include "../params.hpp"
+
 #include <cstdint>
+#include <cstdio>
 
 class Memory {
 public:

@@ -1,6 +1,8 @@
 #include "pipeline"
 #include <queue>
 
+//TODO:: remove this file but before replace functional to emulator or another file
+
 /*
 //fetch
 input: fd
@@ -27,7 +29,7 @@ Pipeline::Pipeline() : ticks(0), tasks(std::queue<Task>(0)) {
 }
 
 void Pipeline::initTable() {
-    instructionTable["mov"] = commandDecomposed(mov, 2, 1);
+    //instructionTable["mov"] = commandDecomposed(mov, 2, 1);
     //add more instructions
 }
 
