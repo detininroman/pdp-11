@@ -1,20 +1,14 @@
 #pragma once
 
 #include "../memory/memory.h"
-#include "instructions.hpp"
+//#include "instructions.hpp"
 #include <fstream>
 #include <map>
 
 using std::string;
 using std::ifstream;
 
-enum PIPELINE_STAGE {
-    FETCH,
-    DECODE,
-    LOAD_OPCODE,
-    EXCECUTE,
-    STORE_RES
-};
+//TODO:: remove this file but before replace functional to emulator or another file
 
 class Pipeline {
 public:
@@ -23,22 +17,9 @@ public:
     int getCurrentState(); // return number of ticks taken
     int makeStep(); // call this from Emulator to perform one operation, returns number of instructions
 private:
-    void fetch();
-
-    void decode();
-
-    void loadOpcode();
-
-    void execute();
-
-    void storeRes();
-
-    void initTable();
 
 
-    PIPELINE_STAGE stage;
 
-    ifstream codeFromFile;
     string instructionLine; // set in fetch
     string tokens[3]; // set in decode
     commandDecomposed command; // set in LoadOpCode
@@ -52,8 +33,5 @@ private:
 
     uint16_t *generalPurpReg[5]; // should be mapped to Reg memory in constructor
 
-    RAM Ram;
-    Video vRam;
-    std::map<std::string, commandDecomposed> instructionTable;
 };
 
