@@ -30,7 +30,7 @@ private:
     typedef enum {
         FETCH,
         DECODE,
-        LOAD_OPCODE,
+        LOAD_OPERAND,
         EXCECUTE,
         STORE_RES
     } PIPELINE_STAGE;
@@ -51,7 +51,7 @@ private:
 
     void decode();
 
-    void loadOpcode();
+    void loadOperand();
 
     void execute();
 
