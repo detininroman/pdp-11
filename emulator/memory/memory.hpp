@@ -5,6 +5,26 @@
 #include <cstdint>
 #include <cstdio>
 
+struct ProcessorStatusWord {
+    bool N;
+    bool Z;
+    bool V;
+    bool C;
+};
+
+struct Registers {
+    struct ProcessorStatusWord psw = {0};
+    // General purpose registers.
+    uint16_t r0;
+    uint16_t r1;
+    uint16_t r2;
+    uint16_t r3;
+    uint16_t r4;
+    uint16_t r5;
+    uint16_t sp; //  Stack Pointer.
+    uint16_t pc; //  Program Counter.
+};
+
 class Memory {
 public:
     Memory(uint16_t size);
@@ -20,6 +40,8 @@ public:
     virtual int setWordValue(uint16_t pos, uint16_t val) = 0;
 
     virtual uint8_t *getByteAdress(uint16_t pos) const = 0;
+
+    struct Registers registers;
 
 protected:
     uint8_t *memory_cells;
