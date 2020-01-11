@@ -3,6 +3,9 @@
 #include "memory/memory.hpp"
 #include "instructions/instructions.hpp"
 
+#include <cstring>
+#include <iostream>
+#include <stdexcept>
 #include <fstream>
 #include <map>
 #include <string>
@@ -10,7 +13,6 @@
 
 
 class Emulator {
-
 public:
     static uint8_t getVideo();
 
@@ -47,6 +49,10 @@ private:
 
     RAM Ram;
     Video vRam;
+
+    uint16_t fetched_bytes;
+    struct Instruction *current_instr;
+
 
     const std::vector<struct Instruction> instructionTable =
             {
