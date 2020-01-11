@@ -10,10 +10,13 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <memory>
 
 
 class Emulator {
 public:
+    Emulator() = default;
+
     static uint8_t getVideo();
 
     bool initROM(std::string fileName);
@@ -25,8 +28,6 @@ public:
     static Emulator &instance();
 
 private:
-    Emulator();
-
     ~Emulator();
 
     Emulator(Emulator const &emulator) = delete;
@@ -47,8 +48,7 @@ private:
 
     PIPELINE_STAGE currentStage;
 
-    RAM Ram;
-    Video vRam;
+    Memory memory;
 
     uint16_t fetched_bytes;
     struct Instruction *current_instr;
@@ -111,8 +111,6 @@ private:
 */
                     {0xffc0, 0x0000, "halt", halt},
             };
-
-    std::ifstream codeStream;
 
     void fetch();
 
