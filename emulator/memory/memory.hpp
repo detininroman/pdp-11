@@ -56,11 +56,11 @@ public:
 
     ~Memory();
 
-    Error getByteValue(uint16_t, uint8_t *val) const;
+    Error getByteValue(uint16_t, uint8_t **val) const;
 
     Error setByteValue(uint16_t, uint8_t val);
 
-    Error getWordValue(uint16_t, uint16_t *val) const;
+    Error getWordValue(uint16_t, uint16_t **val) const;
 
     Error setWordValue(uint16_t, uint16_t val);
 
