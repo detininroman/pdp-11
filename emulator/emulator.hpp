@@ -75,20 +75,22 @@ private:
 
                     {0xfe00, 0x7000, "mul",  InstructionType::DOUBLE_OPERAND_REG, mul},
                     {0xfe00, 0x7200, "div",  InstructionType::DOUBLE_OPERAND_REG, div},
-/*                  {0xfe00, 0x7400, "ash",  InstructionType::DOUBLE_OPERAND_REG, ash},
-                    {0xfe00, 0x7600, "ashc", InstructionType::DOUBLE_OPERAND_REG, ashc},
+//                  {0xfe00, 0x7400, "ash",  InstructionType::DOUBLE_OPERAND_REG, ash},
+//                  {0xfe00, 0x7600, "ashc", InstructionType::DOUBLE_OPERAND_REG, ashc},
                     {0xfe00, 0x7800, "xor",  InstructionType::DOUBLE_OPERAND_REG, xor_},
-*/
+
                     {0xfe00, 0x7e00, "sob",  InstructionType::DOUBLE_OPERAND_REG, sob},
-/*                  {0xffc0, 0x00c0, "swab", InstructionType::SINGLE_OPERAND, swab},
-                    {0xffc0, 0x0a00, "clr",  InstructionType::SINGLE_OPERAND, clr},
-                    {0xffc0, 0x8a00, "clrb", InstructionType::SINGLE_OPERAND, clrb},
+
+//                  {0xffc0, 0x00c0, "swab", InstructionType::SINGLE_OPERAND, swab},
+                    {0xffc0, 0x0a00, "clr",  InstructionType::SINGLE_OPERAND,     clr},
+/*                  {0xffc0, 0x8a00, "clrb", InstructionType::SINGLE_OPERAND, clrb},
                     {0xffc0, 0x0a40, "com",  InstructionType::SINGLE_OPERAND, com},
                     {0xffc0, 0x8a40, "comb", InstructionType::SINGLE_OPERAND, comb},
-                    {0xffc0, 0x0a80, "inc",  InstructionType::SINGLE_OPERAND, inc},
-                    {0xffc0, 0x8a80, "incb", InstructionType::SINGLE_OPERAND, incb},
-                    {0xffc0, 0x0ac0, "dec",  InstructionType::SINGLE_OPERAND, dec},
-                    {0xffc0, 0x8ac0, "decb", InstructionType::SINGLE_OPERAND, decb},
+*/
+                    {0xffc0, 0x0a80, "inc",  InstructionType::SINGLE_OPERAND,     inc},
+//                  {0xffc0, 0x8a80, "incb", InstructionType::SINGLE_OPERAND, incb},
+                    {0xffc0, 0x0ac0, "dec",  InstructionType::SINGLE_OPERAND,     dec},
+/*                  {0xffc0, 0x8ac0, "decb", InstructionType::SINGLE_OPERAND, decb},
                     {0xffc0, 0x0b00, "neg",  InstructionType::SINGLE_OPERAND, neg},
                     {0xffc0, 0x8b00, "negb", InstructionType::SINGLE_OPERAND, negb},
                     {0xffc0, 0x0b40, "adc",  InstructionType::SINGLE_OPERAND, adc},

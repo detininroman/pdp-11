@@ -37,6 +37,14 @@ Error mul(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
 
 Error div(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
 
+Error xor_(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
+
 Error sob(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
+
+Error clr(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
+
+Error inc(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
+
+Error dec(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
 
 Error halt(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);

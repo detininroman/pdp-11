@@ -92,11 +92,53 @@ Error div(struct Registers *registers, uint16_t *operand1, uint16_t *operand2) {
     return Error::OK;
 }
 
+Error xor_(struct Registers *registers, uint16_t *operand1,
+           uint16_t *operand2) {
+    *operand2 ^= *operand1;
+
+    registers->psw.N = ((*operand2 & (1 << 15)) != 0);
+    registers->psw.Z = (*operand2 == 0);
+    registers->psw.V = false;
+
+    return Error::OK;
+}
+
 Error sob(struct Registers *registers, uint16_t *operand1, uint16_t *operand2) {
     (*operand1)--;
     registers->pc -= 2 * *operand2;
     // To compensate PC += 2 in the end of emulation step.
     registers->pc -= 2;
+
+    return Error::OK;
+}
+
+Error clr(struct Registers *registers, uint16_t *operand1, uint16_t *operand2) {
+    *operand1 = 0;
+
+    registers->psw.N = false;
+    registers->psw.Z = true;
+    registers->psw.V = false;
+    registers->psw.C = false;
+
+    return Error::OK;
+}
+
+Error inc(struct Registers *registers, uint16_t *operand1, uint16_t *operand2) {
+    (*operand1)++;
+
+    registers->psw.N = ((*operand1 & (1 << 15)) != 0);
+    registers->psw.Z = (*operand1 == 0);
+    registers->psw.V = (*operand1 - 1 == 0x7fff);
+
+    return Error::OK;
+}
+
+Error dec(struct Registers *registers, uint16_t *operand1, uint16_t *operand2) {
+    (*operand1)--;
+
+    registers->psw.N = ((*operand1 & (1 << 15)) != 0);
+    registers->psw.Z = (*operand1 == 0);
+    registers->psw.V = (*operand1 + 1 == 0x8000);
 
     return Error::OK;
 }
