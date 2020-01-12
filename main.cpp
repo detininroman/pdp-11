@@ -11,7 +11,7 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(1900, 1350), "PDP-11");
 
     sf::Font font;
-    font.loadFromFile("./resources/font.ttf");
+    font.loadFromFile("./resources/helvetica.ttf");
 
     Screen vRam(&window, 1050, 600, 50, 50);
     Screen byteCodeScreen(&window, 700, 600, 1150, 50);
@@ -67,7 +67,7 @@ int main() {
             }
         }
 
-        window.clear(sf::Color(43, 43, 43));
+        window.clear(sf::Color(34, 34, 34));
 
         for (auto screen: screens) {
             screen->update();
