@@ -22,8 +22,7 @@ public:
     void draw(uint8_t *buff);
 };
 
-Screen::Screen(sf::RenderWindow *window,
-               unsigned int width, unsigned int height,
+Screen::Screen(sf::RenderWindow *window, unsigned int width, unsigned int height,
                int xLeftTop, int yLeftTop, bool vRamScreen = false) :
         GUIObject(window), vRamScreen_(vRamScreen) {
     sf::Texture texture;

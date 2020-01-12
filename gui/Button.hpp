@@ -1,9 +1,34 @@
 #pragma once
 
 #include <iostream>
+#include <unordered_map>
 #include <SFML/Graphics.hpp>
+#include "../emulator/params.hpp"
+#include "../emulator/emulator.hpp"
 #include "GUIObject.hpp"
 
+
+std::unordered_map <ButtonType, sf::String> buttonNames = {
+        {REG0,   "R0:"},
+        {REG1,   "R1:"},
+        {REG2,   "R2:"},
+        {REG3,   "R3:"},
+        {REG4,   "R4:"},
+        {REG5,   "R5:"},
+        {REG6,   "R6:"},
+        {REG7,   "R7:"},
+        {START,  "Start"},
+        {STOP,   "Stop"},
+        {STEP,   "Step"},
+        {RUN,    "Run"},
+        {N_FLAG, "N"},
+        {Z_FLAG, "Z"},
+        {V_FLAG, "V"},
+        {C_FLAG, "C"},
+        {SYNC,   "Sync"},
+        {CONV,   "Conv"},
+        {TICKS,  "Ticks:"},
+};
 
 class Button : public GUIObject {
 private:
@@ -13,13 +38,13 @@ private:
     sf::Color darkGray = sf::Color(46, 46, 46);
     sf::Color lightGray = sf::Color(172, 172, 172);
     bool clicked;
+    ButtonType type_;
 
 public:
     sf::IntRect rect_;
 
-    Button(sf::RenderWindow *window, sf::Font font, unsigned int width,
-           unsigned int height, int xLeftTop, int yLeftTop,
-           sf::String name, bool centered, int characterSize);
+    Button(sf::RenderWindow *window, sf::Font font, unsigned int width, unsigned int height,
+           int xLeftTop, int yLeftTop, ButtonType type, bool centered, int characterSize);
 
     ~Button() {};
 
@@ -30,11 +55,9 @@ public:
     void update();
 };
 
-Button::Button(sf::RenderWindow *window, sf::Font font,
-               unsigned int width, unsigned int height,
-               int xLeftTop, int yLeftTop, sf::String name,
-               bool centered = true, int characterSize = 36) :
-        GUIObject(window), font_(font), clicked(false),
+Button::Button(sf::RenderWindow *window, sf::Font font, unsigned int width, unsigned int height,
+               int xLeftTop, int yLeftTop, ButtonType type, bool centered = true, int characterSize = 36) :
+        GUIObject(window), font_(font), clicked(false), type_(type),
         rect_(sf::IntRect(xLeftTop, yLeftTop, width, height)) {
 
     sf::Texture texture;
@@ -44,7 +67,7 @@ Button::Button(sf::RenderWindow *window, sf::Font font,
     sprite_.setColor(darkGray);
 
     text_.setFont(font_);
-    text_.setString(name);
+    text_.setString(buttonNames[type_]);
     text_.setCharacterSize(characterSize);
     text_.setFillColor(lightGray);
 
@@ -65,6 +88,10 @@ void Button::draw() {
 
 void Button::update() {
     sprite_.setColor((clicked) ? green : darkGray);
+    if (type_ >= REG0 && type_ <= REG7) {
+        auto reg = Emulator::instance().getRegister((RegisterEnum) type_);
+        text_.setString(buttonNames[type_] + " " + sf::String(std::to_string(reg)));
+    }
 }
 
 void Button::clickHandler() {

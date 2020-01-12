@@ -14,43 +14,43 @@ int main() {
     sf::Font font;
     font.loadFromFile("./resources/helvetica.ttf");
 
+    sf::Color darkGray = sf::Color(34, 34, 34);
+
     Screen vRam(&window, 1050, 600, 50, 50, true);
     Screen byteCodeScreen(&window, 700, 600, 1150, 50);
     Screen disAsmScreen(&window, 700, 600, 1150, 700);
 
-    Button runButton(&window, font, 310, 70, 450, 1150, "Run");
-    Button stopButton(&window, font, 310, 70, 450, 1225, "Stop");
-    Button stepButton(&window, font, 310, 70, 790, 1150, "Step");
-    Button startButton(&window, font, 310, 70, 790, 1225, "Start");
+    Button runButton(&window, font, 310, 70, 450, 1150, ButtonType::RUN);
+    Button stopButton(&window, font, 310, 70, 450, 1225, ButtonType::STOP);
+    Button stepButton(&window, font, 310, 70, 790, 1150, ButtonType::STEP);
+    Button startButton(&window, font, 310, 70, 790, 1225, ButtonType::START);
 
-    Button nFlag(&window, font, 70, 70, 450, 775, "N");
-    Button zFlag(&window, font, 70, 70, 530, 775, "Z");
-    Button vFlag(&window, font, 70, 70, 610, 775, "V");
-    Button cFlag(&window, font, 70, 70, 690, 775, "C");
+    Button nFlag(&window, font, 70, 70, 450, 775, ButtonType::N_FLAG);
+    Button zFlag(&window, font, 70, 70, 530, 775, ButtonType::Z_FLAG);
+    Button vFlag(&window, font, 70, 70, 610, 775, ButtonType::V_FLAG);
+    Button cFlag(&window, font, 70, 70, 690, 775, ButtonType::C_FLAG);
 
-    Button R0(&window, font, 350, 70, 50, 700, "R0:", false);
-    Button R1(&window, font, 350, 70, 50, 775, "R1:", false);
-    Button R2(&window, font, 350, 70, 50, 850, "R2:", false);
-    Button R3(&window, font, 350, 70, 50, 925, "R3:", false);
-    Button R4(&window, font, 350, 70, 50, 1000, "R4:", false);
-    Button R5(&window, font, 350, 70, 50, 1075, "R5:", false);
-    Button R6(&window, font, 350, 70, 50, 1150, "R6:", false);
-    Button R7(&window, font, 350, 70, 50, 1225, "R7:", false);
+    Button R0(&window, font, 350, 70, 50, 700, ButtonType::REG0, false);
+    Button R1(&window, font, 350, 70, 50, 775, ButtonType::REG1, false);
+    Button R2(&window, font, 350, 70, 50, 850, ButtonType::REG2, false);
+    Button R3(&window, font, 350, 70, 50, 925, ButtonType::REG3, false);
+    Button R4(&window, font, 350, 70, 50, 1000, ButtonType::REG4, false);
+    Button R5(&window, font, 350, 70, 50, 1075, ButtonType::REG5, false);
+    Button R6(&window, font, 350, 70, 50, 1150, ButtonType::REG6, false);
+    Button R7(&window, font, 350, 70, 50, 1225, ButtonType::REG7, false);
 
-    Button syncButton(&window, font, 310, 70, 450, 700, "Sync");
-    Button conveyorButton(&window, font, 310, 70, 790, 700, "Conv");
-    Button ticksButton(&window, font, 310, 70, 790, 775, "Ticks:", false);
+    Button syncButton(&window, font, 310, 70, 450, 700, ButtonType::SYNC);
+    Button conveyorButton(&window, font, 310, 70, 790, 700, ButtonType::CONV);
+    Button ticksButton(&window, font, 310, 70, 790, 775, ButtonType::TICKS, false);
 
-    auto buttons = {&startButton, &stopButton, &stepButton, &runButton,
-                    &nFlag, &zFlag, &vFlag, &cFlag, &R0, &R1, &R2, &R3, &R4,
-                    &R5, &R6, &R7, &syncButton, &conveyorButton, &ticksButton};
+    auto buttons = {&startButton, &stopButton, &stepButton, &runButton, &nFlag, &zFlag, &vFlag, &cFlag,
+                    &R0, &R1, &R2, &R3, &R4, &R5, &R6, &R7, &syncButton, &conveyorButton, &ticksButton};
 
     auto screens = {&byteCodeScreen, &disAsmScreen};
 
     Emulator::instance().initROM("emulator/rom.raw");
-    std::cout << "huy" << std::endl;
-    std::cout << Emulator::instance().getRegister(REG_SP) << std::endl;
-    std::cout << Emulator::instance().getProcessorStatusWord(PSW_C) << std::endl;
+    //std::cout << Emulator::instance().getProcessorStatusWord(PSW_C) << std::endl;
+
     auto buff = new uint8_t[VIDEO_SIZE];
     Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
 
@@ -73,7 +73,7 @@ int main() {
             }
         }
 
-        window.clear(sf::Color(34, 34, 34));
+        window.clear(darkGray);
 
         for (auto screen: screens) {
             screen->update();
