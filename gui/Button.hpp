@@ -1,34 +1,12 @@
 #pragma once
 
 #include <iostream>
-#include <unordered_map>
 #include <SFML/Graphics.hpp>
 #include "../emulator/params.hpp"
 #include "../emulator/emulator.hpp"
+#include "params.hpp"
 #include "GUIObject.hpp"
 
-
-std::unordered_map <ButtonType, sf::String> buttonNames = {
-        {REG0,   "R0:"},
-        {REG1,   "R1:"},
-        {REG2,   "R2:"},
-        {REG3,   "R3:"},
-        {REG4,   "R4:"},
-        {REG5,   "R5:"},
-        {REG6,   "R6:"},
-        {REG7,   "R7:"},
-        {START,  "Start"},
-        {STOP,   "Stop"},
-        {STEP,   "Step"},
-        {RUN,    "Run"},
-        {N_FLAG, "N"},
-        {Z_FLAG, "Z"},
-        {V_FLAG, "V"},
-        {C_FLAG, "C"},
-        {SYNC,   "Sync"},
-        {CONV,   "Conv"},
-        {TICKS,  "Ticks:"},
-};
 
 class Button : public GUIObject {
 private:
@@ -44,7 +22,7 @@ public:
     sf::IntRect rect_;
 
     Button(sf::RenderWindow *window, sf::Font font, unsigned int width, unsigned int height,
-           int xLeftTop, int yLeftTop, ButtonType type, bool centered, int characterSize);
+           int xLeftTop, int yLeftTop, ButtonType type, int characterSize);
 
     ~Button() {};
 
@@ -56,7 +34,7 @@ public:
 };
 
 Button::Button(sf::RenderWindow *window, sf::Font font, unsigned int width, unsigned int height,
-               int xLeftTop, int yLeftTop, ButtonType type, bool centered = true, int characterSize = 36) :
+               int xLeftTop, int yLeftTop, ButtonType type, int characterSize = 36) :
         GUIObject(window), font_(font), clicked(false), type_(type),
         rect_(sf::IntRect(xLeftTop, yLeftTop, width, height)) {
 
@@ -76,6 +54,8 @@ Button::Button(sf::RenderWindow *window, sf::Font font, unsigned int width, unsi
     float textWidth = text_.getLocalBounds().width;
     float textHeight = text_.getLocalBounds().height;
 
+    bool leftAligned = (type_ >= REG0 && type_ <= REG7) || type_ == TICKS;
+    auto centered = !leftAligned;
     auto shift = (centered) ? spriteWidth / 2 : textWidth / 2 + 20;
     text_.setPosition(xLeftTop + shift, yLeftTop + spriteHeight / 2);
     text_.setOrigin(textWidth / 2, textHeight / 2);
