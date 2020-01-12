@@ -13,6 +13,26 @@
 #include <vector>
 #include <memory>
 
+typedef enum {
+    FETCH,
+    DECODE,
+    LOAD_OPERAND,
+    EXCECUTE,
+    STORE_RES
+} PIPELINE_STAGE;
+
+
+struct StateVariables {
+    PIPELINE_STAGE currentStage;
+    uint16_t fetched_bytes;
+    struct Instruction *current_instr;
+    uint8_t offset;
+    uint8_t mode_source, source, mode_dest, dest;
+    uint8_t reg, mode, src_or_dest;
+    uint16_t *source_reg, *dest_reg;
+
+    uint16_t operand1, operand2;
+};
 
 class Emulator {
 public:
@@ -37,26 +57,13 @@ private:
 
     Emulator &operator=(Emulator const &emulator) = delete;
 
-    typedef enum {
-        FETCH,
-        DECODE,
-        LOAD_OPERAND,
-        EXCECUTE,
-        STORE_RES
-    } PIPELINE_STAGE;
-
     int ticks;
     // TODO:: move to another class, change according to real data
     const int defaultTicksAddCount = 50;
 
-    PIPELINE_STAGE currentStage;
+    StateVariables emulator_state;
 
     Memory memory;
-
-    uint16_t fetched_bytes;
-    struct Instruction *current_instr;
-
-
     const std::vector<struct Instruction> instructionTable =
             {
                     {0xf000, 0x1000, "mov",  InstructionType::DOUBLE_OPERAND,     mov},
@@ -123,7 +130,7 @@ private:
 
     void decode();
 
-    void loadOperand();
+    void loadOperands();
 
     void execute();
 
