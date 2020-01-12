@@ -13,12 +13,20 @@ size_t Emulator::getVideoMemory(uint8_t *buff, size_t size) const {
     return memory.getVideoMemory(buff, size);
 }
 
+size_t Emulator::getROM(uint8_t *buff, size_t size) const {
+    return memory.getROM(buff, size);
+}
+
+std::string Emulator::getAssembly() const {
+    return assembly.str();
+}
+
 Error Emulator::initROM(std::string fileName) {
     std::ifstream codeStream(fileName, std::ios::binary | std::ios::ate);
     if (!codeStream.is_open()) {
         throw std::runtime_error("Error opening ROM file!");
     }
-    //initing ROM
+    // initing ROM
     std::ifstream::pos_type end_pos = codeStream.tellg();
     int len = codeStream.tellg();
     codeStream.seekg(0, std::ios::beg);
@@ -67,6 +75,8 @@ void Emulator::decode() {
 }
 
 void Emulator::loadOperands() {
+    assembly << emulator_state.current_instr->name << '\t';
+
     switch (emulator_state.current_instr->type) {
         case InstructionType::CONDITIONAL_BRANCH : {
             emulator_state.offset = (emulator_state.fetched_bytes & 0b0000000011111111);

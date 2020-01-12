@@ -25,8 +25,7 @@ enum ProcessorStatusWordEnum {
 };
 
 struct Registers {
-    struct ProcessorStatusWord psw =
-            {false, false, false, false};
+    struct ProcessorStatusWord psw = {false, false, false, false};
     // General purpose registers.
     uint16_t r0;
     uint16_t r1;
@@ -70,9 +69,12 @@ public:
     struct Registers registers;
 
     uint16_t *reg_table[8];
+
     Error init(uint8_t *memory_dump, int len);
 
     size_t getVideoMemory(uint8_t *buff, size_t size) const;
+
+    size_t getROM(uint8_t *buff, size_t size) const;
 
 private:
 
