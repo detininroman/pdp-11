@@ -5,15 +5,18 @@
 
 
 class Screen : public GUIObject {
+private:
+    sf::Color color_ = sf::Color(60, 63, 65);
 
 public:
+
     Screen(sf::RenderWindow *window, unsigned int width, unsigned int height,
-           int xLeftTop, int yLeftTop, sf::Color color) : GUIObject(window) {
+           int xLeftTop, int yLeftTop) : GUIObject(window) {
         sf::Texture texture;
         texture.create(width, height);
         sprite_.setTexture(texture);
         sprite_.setPosition(xLeftTop, yLeftTop);
-        sprite_.setColor(color);
+        sprite_.setColor(color_);
     }
 
     ~Screen() {};
