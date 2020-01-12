@@ -155,4 +155,6 @@ private:
     void initTable();
 
     uint16_t *pull_out_address(uint8_t reg_num, uint8_t mode_num);
+
+    std::string formatOperand(uint8_t reg_num, uint8_t mode_num);
 };
