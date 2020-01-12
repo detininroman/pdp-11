@@ -75,16 +75,17 @@ void Emulator::loadOperands() {
             break;
         }
         case InstructionType::DOUBLE_OPERAND_REG : {
+            emulator_state.mode_source = 0;
             // 8 to 6 bytes
-            emulator_state.reg = (emulator_state.fetched_bytes & 0b0000000011110000) >> 5;
+            emulator_state.source = (emulator_state.fetched_bytes & 0b0000000011110000) >> 5;
             // 5 to 3 bytes
-            emulator_state.mode = (emulator_state.fetched_bytes & 0b0000000000111000) >> 3;
+            emulator_state.mode_dest = (emulator_state.fetched_bytes & 0b0000000000111000) >> 3;
             // 2 to 0 bytes
-            emulator_state.src_or_dest = (emulator_state.fetched_bytes & 0b0000000000000111);
+            emulator_state.dest = (emulator_state.fetched_bytes & 0b0000000000000111);
 
             // decoding registers
-            emulator_state.source_reg = memory.reg_table[emulator_state.reg];
-            emulator_state.dest_reg = memory.reg_table[emulator_state.src_or_dest];
+            emulator_state.source_reg = memory.reg_table[emulator_state.source];
+            emulator_state.dest_reg = memory.reg_table[emulator_state.dest];
 
             break;
         }
@@ -112,17 +113,32 @@ void Emulator::execute() {
         case InstructionType::CONDITIONAL_BRANCH : {
             break;
         }
-        case InstructionType::DOUBLE_OPERAND : {
+        case InstructionType::DOUBLE_OPERAND: {
+            uint16_t *operand1 = pull_out_address(emulator_state.source, emulator_state.mode_source);
+            uint16_t *operand2 = pull_out_address(emulator_state.dest, emulator_state.mode_dest);
+            if(operand1 && operand2){
+                emulator_state.current_instr->callback(&memory.registers, operand1, operand2); // TODO: check errorcodes
+            }
             break;
         }
         case InstructionType::DOUBLE_OPERAND_REG : {
+            uint16_t *operand1 = pull_out_address(emulator_state.source, emulator_state.mode_source);
+            uint16_t *operand2 = pull_out_address(emulator_state.dest, emulator_state.mode_dest);
+            if(operand1 && operand2) {
+                emulator_state.current_instr->callback(&memory.registers, operand1, operand2);
+            }
             break;
         }
         case InstructionType::SINGLE_OPERAND : {
+            uint16_t *operand = pull_out_address(emulator_state.reg, emulator_state.mode);
+            if(operand){
+                emulator_state.current_instr->callback(&memory.registers, operand, nullptr);
+            }
             break;
         }
         case InstructionType::NO_OPERAND : {
             // for HALT
+            emulator_state.current_instr->callback(&memory.registers, nullptr, nullptr);
             break;
         }
         default:
