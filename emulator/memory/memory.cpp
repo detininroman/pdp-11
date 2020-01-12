@@ -29,11 +29,11 @@ Memory::~Memory() {
     delete memory_cells;
 }
 
-Error Memory::getByteValue(uint16_t pos, uint8_t *val) const {
+Error Memory::getByteValue(uint16_t pos, uint8_t **val) const {
     if (pos > RAM_SIZE + VIDEO_SIZE + ROM_SIZE) {
         return Error::OUT_OF_BOUNDS;
     }
-    val = &memory_cells[pos];
+    *val = &memory_cells[pos];
     return Error::OK;
 }
 
@@ -45,7 +45,8 @@ Error Memory::setByteValue(uint16_t pos, uint8_t val) {
     return Error::OK;
 }
 
-Error Memory::getWordValue(uint16_t pos, uint16_t *val) const {
+Error Memory::getWordValue(uint16_t pos, uint16_t **val) const {
+
     if (pos % 2) {
         throw std::runtime_error(
                 "Address must be even if you want to get whole word");
@@ -53,9 +54,12 @@ Error Memory::getWordValue(uint16_t pos, uint16_t *val) const {
     // returning in BigEndian, while we store in LittleEndian
     // val = (memory_cells[pos + 1] << 8) || (memory_cells[pos] >> 8);
     if (pos > RAM_SIZE + VIDEO_SIZE + ROM_SIZE) {
+
         return Error::OUT_OF_BOUNDS;
     }
-    val = (uint16_t * ) & memory_cells[pos];
+
+    *val = (uint16_t * ) &memory_cells[pos];
+
     return Error::OK;
 }
 
