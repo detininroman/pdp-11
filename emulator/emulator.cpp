@@ -1,4 +1,5 @@
 #include "emulator.hpp"
+#include "memory/memory.hpp"
 
 Emulator::~Emulator() {
 }
@@ -30,6 +31,14 @@ Error Emulator::initROM(std::string fileName) {
     memory.registers.pc = RAM_SIZE + VIDEO_SIZE;
     codeStream.close();
     return Error::OK;
+}
+
+uint16_t Emulator::getRegister(RegisterEnum reg) {
+    return *(&memory.registers.r0+reg);
+}
+
+bool Emulator::getProcessorStatusWord(ProcessorStatusWordEnum psw) {
+    return *(&memory.registers.psw.N+psw);
 }
 
 void Emulator::fetch() {
