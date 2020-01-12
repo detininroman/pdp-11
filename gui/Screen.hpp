@@ -5,15 +5,15 @@
 #include "../emulator/params.hpp"
 
 
+
 class Screen : public GUIObject {
 private:
     sf::Color darkGray = sf::Color(46, 46, 46);
-    // TODO: implement enum for screen types
-    bool vRamScreen_ = false;
+    ScreenType type_;
 
 public:
     Screen(sf::RenderWindow *window, unsigned int width, unsigned int height,
-           int xLeftTop, int yLeftTop, bool vRamScreen);
+           int xLeftTop, int yLeftTop, ScreenType type);
 
     ~Screen() {};
 
@@ -23,8 +23,8 @@ public:
 };
 
 Screen::Screen(sf::RenderWindow *window, unsigned int width, unsigned int height,
-               int xLeftTop, int yLeftTop, bool vRamScreen = false) :
-        GUIObject(window), vRamScreen_(vRamScreen) {
+               int xLeftTop, int yLeftTop, ScreenType type) :
+        GUIObject(window), type_(type) {
     sf::Texture texture;
     texture.create(width, height);
     sprite_.setTexture(texture);
@@ -38,7 +38,7 @@ void Screen::draw() {
 
 void Screen::draw(uint8_t *buff) {
     draw();
-    if (vRamScreen_) {
+    if (type_ == VRAM_SCREEN) {
         int multiplier = 4;
         int xSize = 128 * multiplier;
         int ySize = 64 * multiplier;
