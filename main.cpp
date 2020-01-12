@@ -47,6 +47,9 @@ int main() {
     auto screens = {&vRam, &byteCodeScreen, &disAsmScreen};
 
     Emulator::instance().initROM("emulator/rom.raw");
+    std::cout << "huy" << std::endl;
+    std::cout << Emulator::instance().getRegister(REG_SP) << std::endl;
+    std::cout << Emulator::instance().getProcessorStatusWord(PSW_C) << std::endl;
 
     while (window.isOpen()) {
         sf::Event event;

@@ -14,6 +14,13 @@ struct ProcessorStatusWord {
     bool C;
 };
 
+enum ProcessorStatusWordEnum {
+    PSW_N,
+    PSW_Z,
+    PSW_V,
+    PSW_C
+};
+
 struct Registers {
     struct ProcessorStatusWord psw =
             {false, false, false, false};
@@ -28,6 +35,16 @@ struct Registers {
     uint16_t pc; //  Program Counter.
 };
 
+enum RegisterEnum {
+    REG_R0,
+    REG_R1,
+    REG_R2,
+    REG_R3,
+    REG_R4,
+    REG_R5,
+    REG_SP,
+    REG_PC
+};
 
 class Memory {
 public:

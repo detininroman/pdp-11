@@ -1,5 +1,6 @@
-#include <utility>
 #include <algorithm>
+#include <stdexcept>
+#include <utility>
 
 #include "memory.hpp"
 
