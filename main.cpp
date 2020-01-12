@@ -48,6 +48,9 @@ int main() {
     auto screens = {&byteCodeScreen, &disAsmScreen};
 
     Emulator::instance().initROM("emulator/rom.raw");
+    std::cout << "huy" << std::endl;
+    std::cout << Emulator::instance().getRegister(REG_SP) << std::endl;
+    std::cout << Emulator::instance().getProcessorStatusWord(PSW_C) << std::endl;
     auto buff = new uint8_t[VIDEO_SIZE];
     Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
 
