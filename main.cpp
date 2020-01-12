@@ -1,5 +1,6 @@
-#include <SFML/Graphics.hpp>
 #include <iostream>
+#include <SFML/Graphics.hpp>
+#include <thread>
 
 #include "emulator/emulator.hpp"
 #include "gui/Screen.hpp"
@@ -50,6 +51,7 @@ int main() {
     std::cout << "huy" << std::endl;
     std::cout << Emulator::instance().getRegister(REG_SP) << std::endl;
     std::cout << Emulator::instance().getProcessorStatusWord(PSW_C) << std::endl;
+    std::thread t(&Emulator::startAll, &Emulator::instance());
 
     while (window.isOpen()) {
         sf::Event event;
