@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-//#include "emulator/emulator.hpp"
+#include "emulator/emulator.hpp"
 #include "gui/Screen.hpp"
 #include "gui/Button.hpp"
 #include "gui/GUIObject.hpp"
@@ -46,7 +46,7 @@ int main() {
 
     auto screens = {&vRam, &byteCodeScreen, &disAsmScreen};
 
-//    Emulator::instance().initROM("emulator/rom.raw");
+    Emulator::instance().initROM("emulator/rom.raw");
 
     while (window.isOpen()) {
         sf::Event event;
