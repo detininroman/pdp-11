@@ -3,6 +3,9 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include <utility>
+#include <algorithm>
+
 
 #include "../params.hpp"
 #include "../error.hpp"
@@ -54,15 +57,15 @@ public:
 
     ~Memory();
 
-    Error getByteValue(uint16_t, uint8_t &) const;
+    Error getByteValue(uint16_t, uint8_t *val) const;
 
-    Error setByteValue(uint16_t, uint8_t);
+    Error setByteValue(uint16_t, uint8_t val);
 
-    Error getWordValue(uint16_t, uint16_t &) const;
+    Error getWordValue(uint16_t, uint16_t *val) const;
 
-    Error setWordValue(uint16_t, uint16_t);
+    Error setWordValue(uint16_t, uint16_t val);
 
-    uint8_t *getByteAdress(uint16_t) const;
+    uint8_t *getByteAdress(uint16_t val) const;
 
     struct Registers registers;
 
