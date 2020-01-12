@@ -15,23 +15,12 @@
 #include "memory/memory.hpp"
 
 
-typedef enum {
-    FETCH,
-    DECODE,
-    LOAD_OPERAND,
-    EXCECUTE,
-    STORE_RES
-} PIPELINE_STAGE;
-
-
 struct StateVariables {
-    PIPELINE_STAGE currentStage;
     uint16_t fetched_bytes;
     struct Instruction *current_instr;
     uint8_t offset;
     uint8_t mode_source, source, mode_dest, dest;
-    uint8_t reg, mode, src_or_dest;
-    uint16_t *source_reg, *dest_reg;
+    uint8_t reg, mode;
 };
 
 class Emulator {

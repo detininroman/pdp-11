@@ -14,7 +14,7 @@ Memory::Memory() {
 }
 
 Memory::Memory(uint8_t *memory_dump, int len) {
-    memory_cells = new uint8_t[RAM_SIZE + VIDEO_SIZE + ROM_SIZE];
+    memory_cells = new uint8_t[RAM_SIZE + VIDEO_SIZE + ROM_SIZE]();
     // Copying to ROM part.
     memcpy(memory_cells + RAM_SIZE + VIDEO_SIZE, memory_dump, len);
 }
