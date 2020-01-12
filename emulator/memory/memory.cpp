@@ -55,7 +55,7 @@ Error Memory::getWordValue(uint16_t pos, uint16_t *val) const {
     if (pos > RAM_SIZE + VIDEO_SIZE + ROM_SIZE) {
         return Error::OUT_OF_BOUNDS;
     }
-    val = (uint16_t*) &memory_cells[pos];
+    val = (uint16_t * ) & memory_cells[pos];
     return Error::OK;
 }
 
@@ -74,5 +74,11 @@ uint8_t *Memory::getByteAdress(uint16_t pos) const {
 size_t Memory::getVideoMemory(uint8_t *buff, size_t size) const {
     size_t actual_size = size < VIDEO_SIZE ? size : VIDEO_SIZE;
     memcpy(buff, memory_cells + RAM_SIZE, actual_size);
+    return actual_size;
+}
+
+size_t Memory::getROM(uint8_t *buff, size_t size) const {
+    size_t actual_size = size < ROM_SIZE ? size : ROM_SIZE;
+    memcpy(buff, memory_cells + RAM_SIZE + VIDEO_SIZE, actual_size);
     return actual_size;
 }

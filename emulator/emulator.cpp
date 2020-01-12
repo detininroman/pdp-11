@@ -1,6 +1,17 @@
 #include "emulator.hpp"
 #include "memory/memory.hpp"
 
+enum class AddressingMode {
+    DIRECT = 0,
+    REG_DEFERRED = 1,
+    AUTO_INC = 2,
+    AUTO_INC_DEFERRED = 3,
+    AUTO_DEC = 4,
+    AUTO_DEC_DEFERRED = 5,
+    INDEX = 6,
+    INDEX_DEFERRED = 7,
+};
+
 Emulator::~Emulator() {
 }
 
@@ -25,16 +36,24 @@ size_t Emulator::getVideoMemory(uint8_t *buff, size_t size) const {
     return memory.getVideoMemory(buff, size);
 }
 
+size_t Emulator::getROM(uint8_t *buff, size_t size) const {
+    return memory.getROM(buff, size);
+}
+
+std::string Emulator::getAssembly() const {
+    return assembly.str();
+}
+
 Error Emulator::initROM(std::string fileName) {
     std::ifstream codeStream(fileName, std::ios::binary | std::ios::ate);
     if (!codeStream.is_open()) {
         throw std::runtime_error("Error opening ROM file!");
     }
-    //initing ROM
+    // initing ROM
     std::ifstream::pos_type end_pos = codeStream.tellg();
     int len = codeStream.tellg();
     codeStream.seekg(0, std::ios::beg);
-    std::unique_ptr<uint8_t> mem(new uint8_t[len]);
+    std::unique_ptr <uint8_t> mem(new uint8_t[len]);
     codeStream.read(reinterpret_cast<char *>(mem.get()), end_pos);
     if (memory.init(mem.get(), len) != Error::OK) {
         throw std::runtime_error("Error initializing memory!");
@@ -46,11 +65,11 @@ Error Emulator::initROM(std::string fileName) {
 }
 
 uint16_t Emulator::getRegister(RegisterEnum reg) {
-    return *(&memory.registers.r0+reg);
+    return *(&memory.registers.r0 + reg);
 }
 
 bool Emulator::getProcessorStatusWord(ProcessorStatusWordEnum psw) {
-    return *(&memory.registers.psw.N+psw);
+    return *(&memory.registers.psw.N + psw);
 }
 
 void Emulator::fetch() {
@@ -75,6 +94,8 @@ void Emulator::decode() {
 }
 
 void Emulator::loadOperands() {
+    assembly << emulator_state.current_instr->name << '\t';
+
     switch (emulator_state.current_instr->type) {
         case InstructionType::CONDITIONAL_BRANCH : {
             emulator_state.offset = (emulator_state.fetched_bytes & 0b0000000011111111);
@@ -122,36 +143,41 @@ void Emulator::loadOperands() {
 }
 
 void Emulator::execute() {
+    assembly << emulator_state.current_instr->name << ' ';
+
     switch (emulator_state.current_instr->type) {
         case InstructionType::CONDITIONAL_BRANCH : {
             break;
         }
-        case InstructionType::DOUBLE_OPERAND: {
-            uint16_t *operand1 = pull_out_address(emulator_state.source, emulator_state.mode_source);
-            uint16_t *operand2 = pull_out_address(emulator_state.dest, emulator_state.mode_dest);
-            if(operand1 && operand2){
-                emulator_state.current_instr->callback(&memory.registers, operand1, operand2); // TODO: check errorcodes
-            }
-            break;
-        }
+        case InstructionType::DOUBLE_OPERAND :
         case InstructionType::DOUBLE_OPERAND_REG : {
             uint16_t *operand1 = pull_out_address(emulator_state.source, emulator_state.mode_source);
             uint16_t *operand2 = pull_out_address(emulator_state.dest, emulator_state.mode_dest);
-            if(operand1 && operand2) {
+            if (operand1 && operand2) {
                 emulator_state.current_instr->callback(&memory.registers, operand1, operand2);
             }
+
+            assembly << formatOperand(emulator_state.source, emulator_state.mode_source) << ' ' <<
+                     formatOperand(emulator_state.source, emulator_state.mode_source) << '\n';
+
             break;
         }
         case InstructionType::SINGLE_OPERAND : {
             uint16_t *operand = pull_out_address(emulator_state.reg, emulator_state.mode);
-            if(operand){
+            if (operand) {
                 emulator_state.current_instr->callback(&memory.registers, operand, nullptr);
             }
+
+            assembly << formatOperand(emulator_state.reg, emulator_state.mode) << '\n';
+
             break;
         }
         case InstructionType::NO_OPERAND : {
             // for HALT
             emulator_state.current_instr->callback(&memory.registers, nullptr, nullptr);
+
+            assembly << '\n';
+
             break;
         }
         default:
@@ -165,20 +191,21 @@ void Emulator::startAll() {
 }
 
 uint16_t *Emulator::pull_out_address(uint8_t reg_num, uint8_t mode_num) {
+    AddressingMode addressing_mode = static_cast<AddressingMode> (mode_num);
     uint16_t *address = nullptr; // here we write contents of reg
     uint16_t *reg_pointer = memory.reg_table[reg_num];
-    switch (mode_num) {
-        case 0 : { // Direct addressing of the register
+    switch (addressing_mode) {
+        case AddressingMode::DIRECT : {
             return reg_pointer; // address of reg
         }
-        case 1 : { // Contents of Reg is the address
+        case AddressingMode::REG_DEFERRED : { // Contents of Reg is the address
             if (memory.getWordValue(*reg_pointer, address) == Error::OK) { // address stored in reg
                 return address;
             } else {
                 return nullptr; // Take care
             }
         }
-        case 2 : { // Contents of Reg is the address, then Reg incremented
+        case AddressingMode::AUTO_INC : { // Contents of Reg is the address, then Reg incremented
             if (memory.getWordValue(*reg_pointer, address) == Error::OK) { // address stored in reg
                 *reg_pointer += 2;
                 return address;
@@ -186,7 +213,7 @@ uint16_t *Emulator::pull_out_address(uint8_t reg_num, uint8_t mode_num) {
                 return nullptr; // Take care
             }
         }
-        case 3 : { // Content of Reg is addr of addr, then Reg Incremented
+        case AddressingMode::AUTO_INC_DEFERRED : { // Content of Reg is addr of addr, then Reg Incremented
             if (memory.getWordValue(*reg_pointer, address) == Error::OK) { // address stored in reg
                 uint16_t *address2 = nullptr;
                 if (memory.getWordValue(*address, address2) == Error::OK) { // address of address stored in reg
@@ -199,7 +226,7 @@ uint16_t *Emulator::pull_out_address(uint8_t reg_num, uint8_t mode_num) {
                 return nullptr; // Take care
             }
         }
-        case 4 : { // Reg is decremented then contents is address
+        case AddressingMode::AUTO_DEC : { // Reg is decremented then contents is address
             if (*reg_pointer >= 2) { // important to check, not to overflow unsigned
                 *reg_pointer -= 2;
             } else {
@@ -212,7 +239,7 @@ uint16_t *Emulator::pull_out_address(uint8_t reg_num, uint8_t mode_num) {
                 return nullptr; // Take care
             }
         }
-        case 5 : { // Reg is decremented then contents is addr of addr
+        case AddressingMode::AUTO_DEC_DEFERRED : { // Reg is decremented then contents is addr of addr
             if (*reg_pointer >= 2) { // important to check, not to overflow unsigned
                 *reg_pointer -= 2;
             } else {
@@ -232,7 +259,7 @@ uint16_t *Emulator::pull_out_address(uint8_t reg_num, uint8_t mode_num) {
                 return nullptr; // Take care
             }
         }
-        case 6 : { // Contents of Reg + Following word is address
+        case AddressingMode::INDEX : { // Contents of Reg + Following word is address
             if (memory.getWordValue(*reg_pointer, address) == Error::OK) { // obtaining contents of reg
                 uint16_t *address2 = nullptr;
                 if (memory.getWordValue((*reg_pointer + 2), address2) == Error::OK) { // following word
@@ -248,7 +275,7 @@ uint16_t *Emulator::pull_out_address(uint8_t reg_num, uint8_t mode_num) {
             }
             return nullptr; // Take care
         }
-        case 7 : { // Contents of Reg + Following word is addr of addr
+        case AddressingMode::INDEX_DEFERRED : { // Contents of Reg + Following word is addr of addr
             if (memory.getWordValue(*reg_pointer, address) == Error::OK) {  // obtaining contents of reg
                 uint16_t *address2 = nullptr;
                 if (memory.getWordValue((*reg_pointer + 2), address2) == Error::OK) { // following word
@@ -274,4 +301,40 @@ uint16_t *Emulator::pull_out_address(uint8_t reg_num, uint8_t mode_num) {
         }
     }
     return nullptr; // Take care
+}
+
+std::string Emulator::formatOperand(uint8_t reg_num, uint8_t mode_num) {
+    AddressingMode addressing_mode = static_cast<AddressingMode>(mode_num);
+    std::string reg_name = "r" + std::to_string(reg_num);
+    std::string operand;
+    switch (addressing_mode) {
+        case AddressingMode::DIRECT :
+            return reg_name;
+
+        case AddressingMode::REG_DEFERRED :
+            return "(" + reg_name + ")";
+
+        case AddressingMode::AUTO_INC :
+            return "(" + reg_name + ")+";
+
+        case AddressingMode::AUTO_INC_DEFERRED :
+            return "@(" + reg_name + ")+";
+
+        case AddressingMode::AUTO_DEC :
+            return "-(" + reg_name + ")";
+
+        case AddressingMode::AUTO_DEC_DEFERRED :
+            return "@-(" + reg_name + ")";
+
+        case AddressingMode::INDEX :
+            return "X(" + reg_name + ")";
+
+        case AddressingMode::INDEX_DEFERRED :
+            return "@X(" + reg_name + ")";
+
+        default :
+            break;
+
+    }
+    return "";
 }
