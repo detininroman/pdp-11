@@ -30,8 +30,6 @@ struct StateVariables {
     uint8_t mode_source, source, mode_dest, dest;
     uint8_t reg, mode, src_or_dest;
     uint16_t *source_reg, *dest_reg;
-
-    uint16_t operand1, operand2;
 };
 
 class Emulator {
@@ -137,4 +135,6 @@ private:
     void storeRes();
 
     void initTable();
+
+    uint16_t* pull_out_address(uint8_t reg_num, uint8_t mode_num);
 };

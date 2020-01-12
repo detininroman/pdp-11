@@ -1,12 +1,4 @@
-#include <utility>
-#include <algorithm>
-
 #include "memory.hpp"
-
-Memory::Memory() {
-    //  Zero inited.
-    memory_cells = new uint8_t[RAM_SIZE + VIDEO_SIZE + ROM_SIZE]();
-}
 
 Memory::Memory() {
     reg_table[0] = &registers.r0;

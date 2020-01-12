@@ -3,6 +3,9 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include <utility>
+#include <algorithm>
+
 
 #include "../params.hpp"
 #include "../error.hpp"
