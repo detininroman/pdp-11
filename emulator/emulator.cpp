@@ -9,6 +9,18 @@ Emulator &Emulator::instance() {
     return e;
 }
 
+int Emulator::getTicks() {
+    return 1488;
+}
+
+void Emulator::step() {
+    emulator_state = StateVariables();
+    fetch();
+    decode();
+    loadOperands();
+    execute();
+}
+
 size_t Emulator::getVideoMemory(uint8_t *buff, size_t size) const {
     return memory.getVideoMemory(buff, size);
 }
@@ -39,10 +51,6 @@ uint16_t Emulator::getRegister(RegisterEnum reg) {
 
 bool Emulator::getProcessorStatusWord(ProcessorStatusWordEnum psw) {
     return *(&memory.registers.psw.N+psw);
-}
-
-int Emulator::getTicks() {
-    return 1488;
 }
 
 void Emulator::fetch() {
@@ -82,9 +90,7 @@ void Emulator::loadOperands() {
             // 2 to 0 bytes
             emulator_state.dest = (emulator_state.fetched_bytes & 0b0000000000000111);
 
-            // decoding registers
-            emulator_state.source_reg = memory.reg_table[emulator_state.source];
-            emulator_state.dest_reg = memory.reg_table[emulator_state.dest];
+            //emulator_state.source_reg = memory.reg_table[emulator_state.source];
             break;
         }
         case InstructionType::DOUBLE_OPERAND_REG : {
@@ -96,10 +102,6 @@ void Emulator::loadOperands() {
             // 2 to 0 bytes
             emulator_state.dest = (emulator_state.fetched_bytes & 0b0000000000000111);
 
-            // decoding registers
-            emulator_state.source_reg = memory.reg_table[emulator_state.source];
-            emulator_state.dest_reg = memory.reg_table[emulator_state.dest];
-
             break;
         }
         case InstructionType::SINGLE_OPERAND : {
@@ -108,8 +110,6 @@ void Emulator::loadOperands() {
             // 2 to 0 bytes
             emulator_state.reg = (emulator_state.fetched_bytes & 0b0000000000000111);
 
-            // decoding registers
-            emulator_state.dest_reg = memory.reg_table[emulator_state.reg];
             break;
         }
         case InstructionType::NO_OPERAND : {
