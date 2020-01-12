@@ -1,5 +1,4 @@
 #include "emulator.hpp"
-#include "error.hpp"
 
 Emulator::~Emulator() {
 }
@@ -13,7 +12,7 @@ size_t Emulator::getVideoMemory(uint8_t *buff, size_t size) const {
     return memory.getVideoMemory(buff, size);
 }
 
-bool Emulator::initROM(std::string fileName) {
+Error Emulator::initROM(std::string fileName) {
     std::ifstream codeStream(fileName, std::ios::binary | std::ios::ate);
     if (!codeStream.is_open()) {
         throw std::runtime_error("Error opening ROM file!");
@@ -24,13 +23,13 @@ bool Emulator::initROM(std::string fileName) {
     codeStream.seekg(0, std::ios::beg);
     std::unique_ptr <uint8_t> mem(new uint8_t[len]);
     codeStream.read(reinterpret_cast<char *>(mem.get()), end_pos);
-    if (memory.init(mem.get(), len) != ERROR_OK) {
+    if (memory.init(mem.get(), len) != Error::OK) {
         throw std::runtime_error("Error initializing memory!");
     }
 
     memory.registers.pc = RAM_SIZE + VIDEO_SIZE;
     codeStream.close();
-    return true;
+    return Error::OK;
 }
 
 void Emulator::fetch() {
