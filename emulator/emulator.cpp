@@ -41,6 +41,10 @@ bool Emulator::getProcessorStatusWord(ProcessorStatusWordEnum psw) {
     return *(&memory.registers.psw.N+psw);
 }
 
+int Emulator::getTicks() {
+    return 1488;
+}
+
 void Emulator::fetch() {
     memset(reinterpret_cast<char *>(&emulator_state.fetched_bytes), 0x0, 2);
     memory.getWordValue(memory.registers.pc, emulator_state.fetched_bytes);
