@@ -1,5 +1,5 @@
 CXX = g++
-CXX_FLAGS = -Wall -pedantic -O2 -std=c++17 -Werror
+CXX_FLAGS = -Wall -pedantic -O2 -std=c++17
 SRC = emulator.cpp memory/memory.cpp instructions/instructions.cpp
 TARGET = emulator
 

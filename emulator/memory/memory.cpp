@@ -4,11 +4,6 @@
 #include "memory.hpp"
 
 Memory::Memory() {
-    //  Zero inited.
-    memory_cells = new uint8_t[RAM_SIZE + VIDEO_SIZE + ROM_SIZE]();
-}
-
-Memory::Memory() {
     reg_table[0] = &registers.r0;
     reg_table[1] = &registers.r1;
     reg_table[2] = &registers.r2;
@@ -20,6 +15,7 @@ Memory::Memory() {
 
     memory_cells = new uint8_t[RAM_SIZE + VIDEO_SIZE + ROM_SIZE]();
 }
+
 Memory::Memory(uint8_t *memory_dump, int len) {
     memory_cells = new uint8_t[RAM_SIZE + VIDEO_SIZE + ROM_SIZE];
     // Copying to ROM part.
