@@ -30,8 +30,9 @@ struct Registers {
 
 class Memory {
 public:
-    Memory(uint8_t *, int);
-    Memory() = default;
+    Memory(uint8_t *memory_dump, int len);
+
+    Memory();
 
     ~Memory();
 
@@ -46,6 +47,10 @@ public:
     uint8_t *getByteAdress(uint16_t) const;
 
     struct Registers registers;
+
+    int init(uint8_t *memory_dump, int len);
+
+    size_t getVideoMemory(uint8_t *buff, size_t size) const;
 
 private:
 
