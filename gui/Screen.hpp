@@ -6,7 +6,7 @@
 
 class Screen : public GUIObject {
 private:
-    sf::Color color_ = sf::Color(60, 63, 65);
+    sf::Color darkGray = sf::Color(46, 46, 46);
 
 public:
 
@@ -16,7 +16,7 @@ public:
         texture.create(width, height);
         sprite_.setTexture(texture);
         sprite_.setPosition(xLeftTop, yLeftTop);
-        sprite_.setColor(color_);
+        sprite_.setColor(darkGray);
     }
 
     ~Screen() {};

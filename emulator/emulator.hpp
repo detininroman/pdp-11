@@ -1,8 +1,8 @@
 #pragma once
 
-#include "memory/memory.hpp"
-#include "instructions/instructions.hpp"
 #include "error.hpp"
+#include "instructions/instructions.hpp"
+#include "memory/memory.hpp"
 
 #include <cstring>
 #include <iostream>
@@ -42,11 +42,21 @@ public:
 
     void startAll();
 
-    static void step();
+    void step();
+
+    void stop();
+
+    void startAfterStop();
 
     static Emulator &instance();
 
     size_t getVideoMemory(uint8_t *buff, size_t size) const;
+
+    uint16_t getRegister(RegisterEnum reg);
+
+    bool getProcessorStatusWord(ProcessorStatusWordEnum psw);
+
+    int getTicks();
 
 private:
     ~Emulator();
@@ -135,6 +145,6 @@ private:
     void storeRes();
 
     void initTable();
-
+  
     uint16_t* pull_out_address(uint8_t reg_num, uint8_t mode_num);
 };
