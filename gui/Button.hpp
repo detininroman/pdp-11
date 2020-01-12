@@ -6,17 +6,20 @@
 
 
 class Button : public GUIObject {
-
-public:
+private:
     sf::Font font_;
     sf::Text text_;
-    sf::Color color_ = sf::Color(60, 63, 65);
+    sf::Color green = sf::Color(84, 185, 143);
+    sf::Color darkGray = sf::Color(46, 46, 46);
+    sf::Color lightGray = sf::Color(172, 172, 172);
     bool clicked;
+
+public:
     sf::IntRect rect_;
 
     Button(sf::RenderWindow *window, sf::Font font,
            unsigned int width, unsigned int height, int xLeftTop, int yLeftTop,
-           sf::String name, bool centered = true, int characterSize = 42) :
+           sf::String name, bool centered = true, int characterSize = 36) :
             GUIObject(window), font_(font), clicked(false),
             rect_(sf::IntRect(xLeftTop, yLeftTop, width, height)) {
 
@@ -24,12 +27,12 @@ public:
         texture.create(width, height);
         sprite_.setTexture(texture);
         sprite_.setPosition(xLeftTop, yLeftTop);
-        sprite_.setColor(color_);
+        sprite_.setColor(darkGray);
 
         text_.setFont(font_);
         text_.setString(name);
         text_.setCharacterSize(characterSize);
-        text_.setFillColor(sf::Color::Yellow);
+        text_.setFillColor(lightGray);
 
         float spriteWidth = sprite_.getLocalBounds().width;
         float spriteHeight = sprite_.getLocalBounds().height;
@@ -54,6 +57,6 @@ public:
     }
 
     void update() {
-        text_.setFillColor((clicked) ? sf::Color::Green : sf::Color::Red);
+        sprite_.setColor((clicked) ? green : darkGray);
     }
 };
