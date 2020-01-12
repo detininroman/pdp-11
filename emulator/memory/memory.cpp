@@ -1,7 +1,3 @@
-#include <algorithm>
-#include <stdexcept>
-#include <utility>
-
 #include "memory.hpp"
 
 Memory::Memory() {
@@ -18,7 +14,7 @@ Memory::Memory() {
 }
 
 Memory::Memory(uint8_t *memory_dump, int len) {
-    memory_cells = new uint8_t[RAM_SIZE + VIDEO_SIZE + ROM_SIZE];
+    memory_cells = new uint8_t[RAM_SIZE + VIDEO_SIZE + ROM_SIZE]();
     // Copying to ROM part.
     memcpy(memory_cells + RAM_SIZE + VIDEO_SIZE, memory_dump, len);
 }
@@ -33,23 +29,33 @@ Memory::~Memory() {
     delete memory_cells;
 }
 
-Error Memory::getByteValue(uint16_t pos, uint8_t &val) const {
-    val = memory_cells[pos];
+Error Memory::getByteValue(uint16_t pos, uint8_t *val) const {
+    if (pos > RAM_SIZE + VIDEO_SIZE + ROM_SIZE) {
+        return Error::OUT_OF_BOUNDS;
+    }
+    val = &memory_cells[pos];
     return Error::OK;
 }
 
 Error Memory::setByteValue(uint16_t pos, uint8_t val) {
+    if (pos > RAM_SIZE + VIDEO_SIZE + ROM_SIZE) {
+        return Error::OUT_OF_BOUNDS;
+    }
     memory_cells[pos] = val;
     return Error::OK;
 }
 
-Error Memory::getWordValue(uint16_t pos, uint16_t &val) const {
+Error Memory::getWordValue(uint16_t pos, uint16_t *val) const {
     if (pos % 2) {
         throw std::runtime_error(
                 "Address must be even if you want to get whole word");
     }
     // returning in BigEndian, while we store in LittleEndian
-    val = (memory_cells[pos + 1] << 8) || (memory_cells[pos] >> 8);
+    // val = (memory_cells[pos + 1] << 8) || (memory_cells[pos] >> 8);
+    if (pos > RAM_SIZE + VIDEO_SIZE + ROM_SIZE) {
+        return Error::OUT_OF_BOUNDS;
+    }
+    val = (uint16_t*) &memory_cells[pos];
     return Error::OK;
 }
 
@@ -59,6 +65,9 @@ Error Memory::setWordValue(uint16_t pos, uint16_t val) {
 }
 
 uint8_t *Memory::getByteAdress(uint16_t pos) const {
+    if (pos > RAM_SIZE + VIDEO_SIZE + ROM_SIZE) {
+        return nullptr; // Take care
+    }
     return &memory_cells[pos];
 }
 

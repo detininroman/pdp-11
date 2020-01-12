@@ -3,6 +3,7 @@
 #include <thread>
 
 #include "emulator/emulator.hpp"
+#include "emulator/params.hpp"
 #include "gui/Screen.hpp"
 #include "gui/Button.hpp"
 #include "gui/GUIObject.hpp"
@@ -14,7 +15,7 @@ int main() {
     sf::Font font;
     font.loadFromFile("./resources/helvetica.ttf");
 
-    Screen vRam(&window, 1050, 600, 50, 50);
+    Screen vRam(&window, 1050, 600, 50, 50, true);
     Screen byteCodeScreen(&window, 700, 600, 1150, 50);
     Screen disAsmScreen(&window, 700, 600, 1150, 700);
 
@@ -45,13 +46,15 @@ int main() {
                     &nFlag, &zFlag, &vFlag, &cFlag, &R0, &R1, &R2, &R3, &R4,
                     &R5, &R6, &R7, &syncButton, &conveyorButton, &ticksButton};
 
-    auto screens = {&vRam, &byteCodeScreen, &disAsmScreen};
+    auto screens = {&byteCodeScreen, &disAsmScreen};
 
     Emulator::instance().initROM("emulator/rom.raw");
     std::cout << "huy" << std::endl;
     std::cout << Emulator::instance().getRegister(REG_SP) << std::endl;
     std::cout << Emulator::instance().getProcessorStatusWord(PSW_C) << std::endl;
     std::thread t(&Emulator::startAll, &Emulator::instance());
+    auto buff = new uint8_t[VIDEO_SIZE];
+    Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
 
     while (window.isOpen()) {
         sf::Event event;
@@ -87,6 +90,8 @@ int main() {
         for (auto button : buttons) {
             button->draw();
         }
+
+        vRam.draw(buff);
 
         window.display();
     }
