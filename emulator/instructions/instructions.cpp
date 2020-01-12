@@ -77,7 +77,7 @@ Error div(struct Registers *registers, uint16_t *operand1, uint16_t *operand2) {
     uint16_t quotient = dividend / *operand2;
     uint32_t big_quotient = dividend / *operand2;
     uint16_t remainder = dividend - quotient * *operand2;
-    if (big_quotient > (uint32_t)(quotient & 0x7FFF)) {
+    if (big_quotient > (uint32_t) (quotient & 0x7FFF)) {
         // Quotient exceeds 15 bits
         registers->psw.V = true;
         return Error::OVERFLOW;
