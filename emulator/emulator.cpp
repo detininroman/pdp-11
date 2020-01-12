@@ -53,7 +53,7 @@ Error Emulator::initROM(std::string fileName) {
     std::ifstream::pos_type end_pos = codeStream.tellg();
     int len = codeStream.tellg();
     codeStream.seekg(0, std::ios::beg);
-    std::unique_ptr <uint8_t> mem(new uint8_t[len]);
+    std::unique_ptr<uint8_t> mem(new uint8_t[len]);
     codeStream.read(reinterpret_cast<char *>(mem.get()), end_pos);
 
     if (memory.init(mem.get(), len) != Error::OK) {
@@ -77,21 +77,25 @@ void Emulator::fetch() {
     memset(reinterpret_cast<char *>(&emulator_state.fetched_bytes), 0x0, 2);
     uint16_t *memory_pointer;
     memory.getWordValue(memory.registers.pc, &memory_pointer);
+    // little to big endian
+    //emulator_state.fetched_bytes = ((*memory_pointer & 0x00FF) << 8) | ((*memory_pointer & 0xFF00) >> 8);
     emulator_state.fetched_bytes = *memory_pointer;
     memory.registers.pc += 2;
-
 }
 
 void Emulator::decode() {
     emulator_state.current_instr = nullptr;
+
     for (auto &instr : instructionTable) {
         auto mask = instr.mask;
         auto opcode = instr.opcode;
-        if ((mask && emulator_state.fetched_bytes) == opcode) {
+
+        if ((mask & emulator_state.fetched_bytes) == opcode) {
             emulator_state.current_instr = const_cast<Instruction *>(&instr);
             break;
         }
     }
+
     if (!emulator_state.current_instr) {
         throw std::runtime_error("Found command with invalid opcode!");
     }
@@ -107,9 +111,9 @@ void Emulator::loadOperands() {
         }
         case InstructionType::DOUBLE_OPERAND : {
             // 11 to 9 bytes
-            emulator_state.mode_source = (emulator_state.fetched_bytes & 0b0000011100000000) >> 8;
+            emulator_state.mode_source = (emulator_state.fetched_bytes & 0b0000111000000000) >> 9;
             // 8 to 6 bytes
-            emulator_state.source = (emulator_state.fetched_bytes & 0b0000000011110000) >> 5;
+            emulator_state.source = (emulator_state.fetched_bytes & 0b0000000111000000) >> 6;
             // 5 to 3 bytes
             emulator_state.mode_dest = (emulator_state.fetched_bytes & 0b0000000000111000) >> 3;
             // 2 to 0 bytes
@@ -121,7 +125,7 @@ void Emulator::loadOperands() {
         case InstructionType::DOUBLE_OPERAND_REG : {
             emulator_state.mode_source = 0;
             // 8 to 6 bytes
-            emulator_state.source = (emulator_state.fetched_bytes & 0b0000000011110000) >> 5;
+            emulator_state.source = (emulator_state.fetched_bytes & 0b0000000111000000) >> 6;
             // 5 to 3 bytes
             emulator_state.mode_dest = (emulator_state.fetched_bytes & 0b0000000000111000) >> 3;
             // 2 to 0 bytes
@@ -157,8 +161,10 @@ void Emulator::execute() {
         case InstructionType::DOUBLE_OPERAND_REG : {
             uint16_t *operand1 = pull_out_address(emulator_state.source, emulator_state.mode_source);
             uint16_t *operand2 = pull_out_address(emulator_state.dest, emulator_state.mode_dest);
+
             if (operand1 && operand2) {
                 emulator_state.current_instr->callback(&memory.registers, operand1, operand2);
+
             }
 
             assembly << formatOperand(emulator_state.source, emulator_state.mode_source) << ' ' <<
@@ -286,7 +292,8 @@ uint16_t *Emulator::pull_out_address(uint8_t reg_num, uint8_t mode_num) {
                     uint16_t *address3 = nullptr;
                     if (memory.getWordValue((*address + *address2), &address3) == Error::OK) { // by summ of addr
                         uint16_t *output_address = nullptr;
-                        if (memory.getWordValue((*address + *address2), &output_address) == Error::OK) { // go to address
+                        if (memory.getWordValue((*address + *address2), &output_address) ==
+                            Error::OK) { // go to address
                             return output_address;
                         } else {
                             return nullptr; // Take care
