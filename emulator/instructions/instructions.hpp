@@ -9,7 +9,7 @@ enum class InstructionType {
     DOUBLE_OPERAND,
     DOUBLE_OPERAND_REG,
     SINGLE_OPERAND,
-    CONDITIONAL,
+    CONDITIONAL_BRANCH,
     NO_OPERAND,
 };
 
@@ -19,7 +19,6 @@ struct Instruction {
     uint16_t opcode;
     std::string name;
     InstructionType type;
-
     void (*callback)(struct Registers *registers, uint16_t *operand1,
                      uint16_t *operand2);
 };

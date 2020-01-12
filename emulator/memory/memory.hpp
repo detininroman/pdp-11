@@ -31,7 +31,8 @@ struct Registers {
 class Memory {
 public:
     Memory(uint8_t *, int);
-    Memory() = default;
+
+    Memory();
 
     ~Memory();
 
@@ -46,6 +47,8 @@ public:
     uint8_t *getByteAdress(uint16_t) const;
 
     struct Registers registers;
+
+    uint16_t *reg_table[8];
 
 private:
 
