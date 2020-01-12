@@ -30,7 +30,7 @@ struct Registers {
 
 class Memory {
 public:
-    Memory(uint8_t *, int);
+    Memory(uint8_t *memory_dump, int len);
 
     Memory();
 
@@ -49,6 +49,10 @@ public:
     struct Registers registers;
 
     uint16_t *reg_table[8];
+
+    int init(uint8_t *memory_dump, int len);
+
+    size_t getVideoMemory(uint8_t *buff, size_t size) const;
 
 private:
 

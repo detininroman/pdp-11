@@ -11,7 +11,7 @@ public:
 
     GUIObject(sf::RenderWindow *window) : window_(window) {};
 
-    ~GUIObject() {};
+    virtual ~GUIObject() {};
 
     virtual void draw() {
         window_->draw(sprite_);

@@ -47,6 +47,8 @@ public:
 
     static Emulator &instance();
 
+    size_t getVideoMemory(uint8_t *buff, size_t size) const;
+
 private:
     ~Emulator();
 
