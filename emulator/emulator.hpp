@@ -56,7 +56,7 @@ private:
 
     const std::vector<struct Instruction> instructionTable =
             {
-                    {0xf000, 0x1000, "mov",  mov},
+                    {0xf000, 0x1000, "mov",  InstructionType::DOUBLE_OPERAND,     mov},
 /*                  {0xf000, 0x9000, "movb", movb},
                     {0xf000, 0x2000, "cmp",  cmp},
                     {0xf000, 0xa000, "cmpb", cmpb},
@@ -74,7 +74,7 @@ private:
                     {0xfe00, 0x7600, "ashc", ashc},
                     {0xfe00, 0x7800, "xor",  xor_},
 */
-                    {0xfe00, 0x7e00, "sob",  sob},
+                    {0xfe00, 0x7e00, "sob",  InstructionType::DOUBLE_OPERAND_REG, sob},
 /*                  {0xffc0, 0x00c0, "swab", swab},
                     {0xffc0, 0x0a00, "clr",  clr},
                     {0xffc0, 0x8a00, "clrb", clrb},
@@ -109,7 +109,7 @@ private:
                     {0xffc0, 0x0dc0, "sxt",  sxt},
                     {0xffc0, 0x8dc0, "mfps", mfps},
 */
-                    {0xffc0, 0x0000, "halt", halt},
+                    {0xffc0, 0x0000, "halt", InstructionType::NO_OPERAND,         halt},
             };
 
     void fetch();
