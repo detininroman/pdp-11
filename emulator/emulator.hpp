@@ -44,7 +44,11 @@ public:
 
     void startAll();
 
-    static void step();
+    void step();
+
+    void stop();
+
+    void startAfterStop();
 
     static Emulator &instance();
 
