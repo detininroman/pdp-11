@@ -4,6 +4,7 @@
 #include <string>
 
 #include "../memory/memory.hpp"
+#include "../error.hpp"
 
 enum class InstructionType {
     DOUBLE_OPERAND,
@@ -19,12 +20,30 @@ struct Instruction {
     uint16_t opcode;
     std::string name;
     InstructionType type;
-    void (*callback)(struct Registers *registers, uint16_t *operand1,
-                     uint16_t *operand2);
+    Error (*callback)(struct Registers *registers, uint16_t *operand1,
+                      uint16_t *operand2);
 };
 
-void mov(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
+Error mov(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
 
-void sob(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
+Error cmp(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
 
-void halt(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
+Error add(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
+
+Error sub(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
+
+Error mul(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
+
+Error div(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
+
+Error xor_(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
+
+Error sob(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
+
+Error clr(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
+
+Error inc(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
+
+Error dec(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);
+
+Error halt(struct Registers *registers, uint16_t *operand1, uint16_t *operand2);

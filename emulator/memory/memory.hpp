@@ -1,10 +1,11 @@
 #pragma once
 
-#include "../params.hpp"
-
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+
+#include "../params.hpp"
+#include "../error.hpp"
 
 struct ProcessorStatusWord {
     bool N;
@@ -36,21 +37,20 @@ public:
 
     ~Memory();
 
-    int getByteValue(uint16_t, uint8_t &) const;
+    Error getByteValue(uint16_t, uint8_t &) const;
 
-    int setByteValue(uint16_t, uint8_t);
+    Error setByteValue(uint16_t, uint8_t);
 
-    int getWordValue(uint16_t, uint16_t &) const;
+    Error getWordValue(uint16_t, uint16_t &) const;
 
-    int setWordValue(uint16_t, uint16_t);
+    Error setWordValue(uint16_t, uint16_t);
 
     uint8_t *getByteAdress(uint16_t) const;
 
     struct Registers registers;
 
     uint16_t *reg_table[8];
-
-    int init(uint8_t *memory_dump, int len);
+    Error init(uint8_t *memory_dump, int len);
 
     size_t getVideoMemory(uint8_t *buff, size_t size) const;
 
