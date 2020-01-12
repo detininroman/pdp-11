@@ -9,6 +9,10 @@ Emulator &Emulator::instance() {
     return e;
 }
 
+size_t Emulator::getVideoMemory(uint8_t *buff, size_t size) const {
+    return memory.getVideoMemory(buff, size);
+}
+
 bool Emulator::initROM(std::string fileName) {
     std::ifstream codeStream(fileName, std::ios::binary | std::ios::ate);
     if (!codeStream.is_open()) {

@@ -53,3 +53,9 @@ int Memory::setWordValue(uint16_t pos, uint16_t val) {
 uint8_t *Memory::getByteAdress(uint16_t pos) const {
     return &memory_cells[pos];
 }
+
+size_t Memory::getVideoMemory(uint8_t *buff, size_t size) const {
+    size_t actual_size = size < VIDEO_SIZE ? size : VIDEO_SIZE;
+    memcpy(buff, memory_cells + RAM_SIZE, actual_size);
+    return actual_size;
+}

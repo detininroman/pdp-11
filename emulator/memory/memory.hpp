@@ -50,6 +50,8 @@ public:
 
     int init(uint8_t *memory_dump, int len);
 
+    size_t getVideoMemory(uint8_t *buff, size_t size) const;
+
 private:
 
     uint8_t *memory_cells;
