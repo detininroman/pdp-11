@@ -1,4 +1,5 @@
 #include "instructions.hpp"
+#include "../params.hpp"
 
 Error mov(struct Registers *registers, uint16_t *operand1, uint16_t *operand2) {
     *operand2 = *operand1;
@@ -92,8 +93,7 @@ Error div(struct Registers *registers, uint16_t *operand1, uint16_t *operand2) {
     return Error::OK;
 }
 
-Error xor_(struct Registers *registers, uint16_t *operand1,
-           uint16_t *operand2) {
+Error xor_(struct Registers *registers, uint16_t *operand1, uint16_t *operand2) {
     *operand2 ^= *operand1;
 
     registers->psw.N = ((*operand2 & (1 << 15)) != 0);
@@ -143,8 +143,8 @@ Error dec(struct Registers *registers, uint16_t *operand1, uint16_t *operand2) {
     return Error::OK;
 }
 
-Error halt(struct Registers *registers, uint16_t *operand1,
-           uint16_t *operand2) {
+Error halt(struct Registers *registers, uint16_t *operand1, uint16_t *operand2) {
+    registers->pc = RAM_SIZE + VIDEO_SIZE + ROM_SIZE;
     return Error::OK;
 }
 

@@ -31,7 +31,7 @@ public:
 
     Error initROM(std::string fileName);
 
-    void step();
+    Error step();
 
     size_t getVideoMemory(uint8_t *buff, size_t size) const;
 
@@ -51,10 +51,6 @@ private:
     Emulator(Emulator const &emulator) = delete;
 
     Emulator &operator=(Emulator const &emulator) = delete;
-
-    int ticks;
-    // TODO:: move to another class, change according to real data
-    const int defaultTicksAddCount = 50;
 
     StateVariables emulator_state;
 
