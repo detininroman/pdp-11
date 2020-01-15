@@ -9,7 +9,6 @@ Memory::Memory() {
     reg_table[5] = &registers.r5;
     reg_table[6] = &registers.sp;
     reg_table[7] = &registers.pc;
-
     memory_cells = new uint8_t[RAM_SIZE + VIDEO_SIZE + ROM_SIZE]();
 }
 
@@ -45,8 +44,7 @@ Error Memory::setByteValue(uint16_t pos, uint8_t val) {
     return Error::OK;
 }
 
-Error Memory::getWordValue(uint16_t pos, uint16_t **val) const {
-
+Error Memory::getWordAddress(uint16_t pos, uint16_t **val) const {
     if (pos % 2) {
         throw std::runtime_error(
                 "Address must be even if you want to get whole word");
@@ -57,9 +55,7 @@ Error Memory::getWordValue(uint16_t pos, uint16_t **val) const {
 
         return Error::OUT_OF_BOUNDS;
     }
-
     *val = (uint16_t * ) &memory_cells[pos];
-
     return Error::OK;
 }
 

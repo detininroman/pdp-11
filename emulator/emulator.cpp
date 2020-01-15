@@ -76,7 +76,7 @@ bool Emulator::getProcessorStatusWord(ProcessorStatusWordEnum psw) {
 void Emulator::fetch() {
     memset(reinterpret_cast<char *>(&emulator_state.fetched_bytes), 0x0, 2);
     uint16_t *memory_pointer;
-    memory.getWordValue(memory.registers.pc, &memory_pointer);
+    memory.getWordAddress(memory.registers.pc, &memory_pointer);
     // little to big endian
     //emulator_state.fetched_bytes = ((*memory_pointer & 0x00FF) << 8) | ((*memory_pointer & 0xFF00) >> 8);
     emulator_state.fetched_bytes = *memory_pointer;
@@ -159,8 +159,8 @@ void Emulator::execute() {
         }
         case InstructionType::DOUBLE_OPERAND :
         case InstructionType::DOUBLE_OPERAND_REG : {
-            uint16_t *operand1 = pull_out_address(emulator_state.source, emulator_state.mode_source);
-            uint16_t *operand2 = pull_out_address(emulator_state.dest, emulator_state.mode_dest);
+            uint16_t *operand1 = pullOutAddress(emulator_state.source, emulator_state.mode_source);
+            uint16_t *operand2 = pullOutAddress(emulator_state.dest, emulator_state.mode_dest);
 
             if (operand1 && operand2) {
                 emulator_state.current_instr->callback(&memory.registers, operand1, operand2);
@@ -173,7 +173,7 @@ void Emulator::execute() {
             break;
         }
         case InstructionType::SINGLE_OPERAND : {
-            uint16_t *operand = pull_out_address(emulator_state.reg, emulator_state.mode);
+            uint16_t *operand = pullOutAddress(emulator_state.reg, emulator_state.mode);
             if (operand) {
                 emulator_state.current_instr->callback(&memory.registers, operand, nullptr);
             }
@@ -196,11 +196,7 @@ void Emulator::execute() {
 
 }
 
-void Emulator::startAll() {
-
-}
-
-uint16_t *Emulator::pull_out_address(uint8_t reg_num, uint8_t mode_num) {
+uint16_t *Emulator::pullOutAddress(uint8_t reg_num, uint8_t mode_num) {
     AddressingMode addressing_mode = static_cast<AddressingMode> (mode_num);
     uint16_t *address = nullptr; // here we write contents of reg
     uint16_t *reg_pointer = memory.reg_table[reg_num];
@@ -209,14 +205,14 @@ uint16_t *Emulator::pull_out_address(uint8_t reg_num, uint8_t mode_num) {
             return reg_pointer; // address of reg
         }
         case AddressingMode::REG_DEFERRED : { // Contents of Reg is the address
-            if (memory.getWordValue(*reg_pointer, &address) == Error::OK) { // address stored in reg
+            if (memory.getWordAddress(*reg_pointer, &address) == Error::OK) { // address stored in reg
                 return address;
             } else {
                 return nullptr; // Take care
             }
         }
         case AddressingMode::AUTO_INC : { // Contents of Reg is the address, then Reg incremented
-            if (memory.getWordValue(*reg_pointer, &address) == Error::OK) { // address stored in reg
+            if (memory.getWordAddress(*reg_pointer, &address) == Error::OK) { // address stored in reg
                 *reg_pointer += 2;
                 return address;
             } else {
@@ -224,9 +220,9 @@ uint16_t *Emulator::pull_out_address(uint8_t reg_num, uint8_t mode_num) {
             }
         }
         case AddressingMode::AUTO_INC_DEFERRED : { // Content of Reg is addr of addr, then Reg Incremented
-            if (memory.getWordValue(*reg_pointer, &address) == Error::OK) { // address stored in reg
+            if (memory.getWordAddress(*reg_pointer, &address) == Error::OK) { // address stored in reg
                 uint16_t *address2 = nullptr;
-                if (memory.getWordValue(*address, &address2) == Error::OK) { // address of address stored in reg
+                if (memory.getWordAddress(*address, &address2) == Error::OK) { // address of address stored in reg
                     *reg_pointer += 2;
                     return address2;
                 } else { // smth wrong with second address
@@ -242,7 +238,7 @@ uint16_t *Emulator::pull_out_address(uint8_t reg_num, uint8_t mode_num) {
             } else {
                 return nullptr; // Take care
             }
-            if (memory.getWordValue(*reg_pointer, &address) == Error::OK) {
+            if (memory.getWordAddress(*reg_pointer, &address) == Error::OK) {
                 return address;
             } else {
                 *reg_pointer += 2; // restore reg in case of error
@@ -255,9 +251,9 @@ uint16_t *Emulator::pull_out_address(uint8_t reg_num, uint8_t mode_num) {
             } else {
                 return nullptr; // Take care
             }
-            if (memory.getWordValue(*reg_pointer, &address) == Error::OK) {
+            if (memory.getWordAddress(*reg_pointer, &address) == Error::OK) {
                 uint16_t *address2 = nullptr;
-                if (memory.getWordValue(*address, &address2) == Error::OK) {
+                if (memory.getWordAddress(*address, &address2) == Error::OK) {
                     *reg_pointer += 2;
                     return address2;
                 } else {
@@ -270,11 +266,11 @@ uint16_t *Emulator::pull_out_address(uint8_t reg_num, uint8_t mode_num) {
             }
         }
         case AddressingMode::INDEX : { // Contents of Reg + Following word is address
-            if (memory.getWordValue(*reg_pointer, &address) == Error::OK) { // obtaining contents of reg
+            if (memory.getWordAddress(*reg_pointer, &address) == Error::OK) { // obtaining contents of reg
                 uint16_t *address2 = nullptr;
-                if (memory.getWordValue((*reg_pointer + 2), &address2) == Error::OK) { // following word
+                if (memory.getWordAddress((*reg_pointer + 2), &address2) == Error::OK) { // following word
                     uint16_t *output_address = nullptr;
-                    if (memory.getWordValue((*address + *address2), &output_address) == Error::OK) { // by summ of addr
+                    if (memory.getWordAddress((*address + *address2), &output_address) == Error::OK) { // by summ of addr
                         return output_address;
                     } else {
                         return nullptr; // Take care
@@ -286,13 +282,13 @@ uint16_t *Emulator::pull_out_address(uint8_t reg_num, uint8_t mode_num) {
             return nullptr; // Take care
         }
         case AddressingMode::INDEX_DEFERRED : { // Contents of Reg + Following word is addr of addr
-            if (memory.getWordValue(*reg_pointer, &address) == Error::OK) {  // obtaining contents of reg
+            if (memory.getWordAddress(*reg_pointer, &address) == Error::OK) {  // obtaining contents of reg
                 uint16_t *address2 = nullptr;
-                if (memory.getWordValue((*reg_pointer + 2), &address2) == Error::OK) { // following word
+                if (memory.getWordAddress((*reg_pointer + 2), &address2) == Error::OK) { // following word
                     uint16_t *address3 = nullptr;
-                    if (memory.getWordValue((*address + *address2), &address3) == Error::OK) { // by summ of addr
+                    if (memory.getWordAddress((*address + *address2), &address3) == Error::OK) { // by summ of addr
                         uint16_t *output_address = nullptr;
-                        if (memory.getWordValue((*address + *address2), &output_address) ==
+                        if (memory.getWordAddress((*address + *address2), &output_address) ==
                             Error::OK) { // go to address
                             return output_address;
                         } else {

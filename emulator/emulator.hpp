@@ -31,21 +31,13 @@ public:
 
     Error initROM(std::string fileName);
 
-    void startAll();
-
     void step();
-
-    void stop();
-
-    void startAfterStop();
 
     size_t getVideoMemory(uint8_t *buff, size_t size) const;
 
     size_t getROM(uint8_t *buff, size_t size) const;
 
     std::string getAssembly() const;
-
-    static uint8_t getVideo();
 
     uint16_t getRegister(RegisterEnum reg);
 
@@ -139,11 +131,7 @@ private:
 
     void execute();
 
-    void storeRes();
-
-    void initTable();
-
-    uint16_t *pull_out_address(uint8_t reg_num, uint8_t mode_num);
+    uint16_t *pullOutAddress(uint8_t reg_num, uint8_t mode_num);
 
     std::string formatOperand(uint8_t reg_num, uint8_t mode_num);
 };
