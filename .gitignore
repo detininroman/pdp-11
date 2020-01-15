@@ -32,6 +32,7 @@
 *.app
 *.bin
 emulator/emulator
+assembler/asm
 
 # Vim:
 *.swp

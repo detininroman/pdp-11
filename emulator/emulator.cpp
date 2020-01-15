@@ -53,7 +53,7 @@ Error Emulator::initROM(std::string fileName) {
     std::ifstream::pos_type end_pos = codeStream.tellg();
     int len = codeStream.tellg();
     codeStream.seekg(0, std::ios::beg);
-    std::unique_ptr<uint8_t> mem(new uint8_t[len]);
+    std::unique_ptr <uint8_t> mem(new uint8_t[len]);
     codeStream.read(reinterpret_cast<char *>(mem.get()), end_pos);
 
     if (memory.init(mem.get(), len) != Error::OK) {
@@ -86,7 +86,7 @@ void Emulator::fetch() {
 void Emulator::decode() {
     emulator_state.current_instr = nullptr;
 
-    for (auto &instr : instructionTable) {
+    for (auto &instr : kInstructionTable) {
         auto mask = instr.mask;
         auto opcode = instr.opcode;
 
