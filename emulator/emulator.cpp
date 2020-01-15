@@ -159,12 +159,14 @@ void Emulator::execute() {
         }
         case InstructionType::DOUBLE_OPERAND :
         case InstructionType::DOUBLE_OPERAND_REG : {
+
             uint16_t *operand1 = pullOutAddress(emulator_state.source, emulator_state.mode_source);
+
             uint16_t *operand2 = pullOutAddress(emulator_state.dest, emulator_state.mode_dest);
 
             if (operand1 && operand2) {
-                emulator_state.current_instr->callback(&memory.registers, operand1, operand2);
 
+                emulator_state.current_instr->callback(&memory.registers, operand1, operand2);
             }
 
             assembly << formatOperand(emulator_state.source, emulator_state.mode_source) << ' ' <<
@@ -174,6 +176,7 @@ void Emulator::execute() {
         }
         case InstructionType::SINGLE_OPERAND : {
             uint16_t *operand = pullOutAddress(emulator_state.reg, emulator_state.mode);
+
             if (operand) {
                 emulator_state.current_instr->callback(&memory.registers, operand, nullptr);
             }
@@ -212,10 +215,14 @@ uint16_t *Emulator::pullOutAddress(uint8_t reg_num, uint8_t mode_num) {
             }
         }
         case AddressingMode::AUTO_INC : { // Contents of Reg is the address, then Reg incremented
+
             if (memory.getWordAddress(*reg_pointer, &address) == Error::OK) { // address stored in reg
+
                 *reg_pointer += 2;
                 return address;
+
             } else {
+
                 return nullptr; // Take care
             }
         }
