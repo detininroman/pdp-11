@@ -45,8 +45,6 @@ public:
 
     std::string getAssembly() const;
 
-    static uint8_t getVideo();
-
     uint16_t getRegister(RegisterEnum reg);
 
     bool getProcessorStatusWord(ProcessorStatusWordEnum psw);
