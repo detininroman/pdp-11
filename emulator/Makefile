@@ -5,7 +5,7 @@ TARGET = emulator
 
 all: $(TARGET)
 
-$(TARGET): $(SRC)
+$(TARGET): $(SRC) main.cpp
 	$(CXX) $(CXX_FLAGS) main.cpp $(SRC) -o emulator
 
 obj: $(SRC)
