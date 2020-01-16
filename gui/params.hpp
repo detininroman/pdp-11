@@ -54,7 +54,7 @@ enum ButtonType {
     TICKS,
 };
 
-std::unordered_map <ButtonType, sf::String> buttonNames = {
+std::unordered_map <ButtonType, sf::String> button_names = {
         {REG0,   "R0:"},
         {REG1,   "R1:"},
         {REG2,   "R2:"},

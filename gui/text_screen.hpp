@@ -27,7 +27,7 @@ TextScreen::TextScreen(sf::RenderWindow *window, unsigned int width, unsigned in
     text_.setCharacterSize(characterSize);
     text_.setFillColor(lightGray);
     text_.setPosition(xLeftTop + 20, yLeftTop + 20);
-};
+}
 
 void TextScreen::draw() {
     Screen::draw();
