@@ -3,6 +3,11 @@
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
 
+sf::Color green = sf::Color(84, 185, 143);
+sf::Color lightGray = sf::Color(172, 172, 172);
+sf::Color gray = sf::Color(46, 46, 46);
+sf::Color darkGray = sf::Color(34, 34, 34);
+
 enum ScreenType {
     VRAM_SCREEN,
     BYTECODE_SCREEN,

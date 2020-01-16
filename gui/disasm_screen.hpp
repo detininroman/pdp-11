@@ -7,21 +7,28 @@
 
 class DisAsmScreen : public Screen {
 private:
-    sf::Text commands;
+    sf::Font font_;
+    sf::Text text_;
 
     void draw();
 
 public:
     DisAsmScreen(sf::RenderWindow *window, unsigned int width, unsigned int height,
-                 int xLeftTop, int yLeftTop, ScreenType type);
+                 int xLeftTop, int yLeftTop, ScreenType type, sf::Font font, int characterSize);
 
     void draw(const std::vector <std::string> &commands);
 
 };
 
 DisAsmScreen::DisAsmScreen(sf::RenderWindow *window, unsigned int width, unsigned int height,
-                           int xLeftTop, int yLeftTop, ScreenType type) :
-        Screen(window, width, height, xLeftTop, yLeftTop, type) {};
+                           int xLeftTop, int yLeftTop, ScreenType type, sf::Font font, int characterSize = 36) :
+        Screen(window, width, height, xLeftTop, yLeftTop, type), font_(font) {
+    text_.setFont(font_);
+    text_.setString("asm commands should be here");
+    text_.setCharacterSize(characterSize);
+    text_.setFillColor(lightGray);
+    text_.setPosition(xLeftTop + 20, yLeftTop + 20);
+};
 
 void DisAsmScreen::draw() {
     Screen::draw();
@@ -35,8 +42,12 @@ void DisAsmScreen::draw(const std::vector <std::string> &commands) {
     if (commands.empty()) {
         return;
     }
+
+    std::string text;
     for (auto cmd : commands) {
-        std::cout << cmd << std::endl;
+        text += cmd + "\n";
     }
-    std::cout << "_________" << std::endl;
+//    std::cout << text + "\n_________" << std::endl;
+    text_.setString(text);
+    window_->draw(text_);
 }

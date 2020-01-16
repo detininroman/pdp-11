@@ -19,10 +19,8 @@ int main(int argc, char *argv[]) {
     sf::Font font;
     font.loadFromFile("./resources/helvetica.ttf");
 
-    sf::Color darkGray = sf::Color(34, 34, 34);
-
     VRamScreen vRam(&window, 1050, 600, 50, 50, ScreenType::VRAM_SCREEN);
-    DisAsmScreen disAsmScreen(&window, 700, 600, 1150, 700, ScreenType::DISASM_SCREEN);
+    DisAsmScreen disAsmScreen(&window, 700, 600, 1150, 700, ScreenType::DISASM_SCREEN, font);
     Screen byteCodeScreen(&window, 700, 600, 1150, 50, ScreenType::BYTECODE_SCREEN);
 
     Button runButton(&window, font, 310, 70, 450, 1150, ButtonType::RUN);
@@ -52,6 +50,7 @@ int main(int argc, char *argv[]) {
                     &R0, &R1, &R2, &R3, &R4, &R5, &R6, &R7, &syncButton, &conveyorButton, &ticksButton};
 
     bool make_step = true;
+    std::vector <std::string> asm_vec;
     auto buff = new uint8_t[VIDEO_SIZE];
     Emulator::instance().initROM(binFile);
 
@@ -102,9 +101,8 @@ int main(int argc, char *argv[]) {
             button->draw();
         }
 
-        std::vector <std::string> asm_vec;
         if (make_step) {
-            asm_vec = Emulator::instance().getAssemblyCommands(10);
+            asm_vec = Emulator::instance().getAssemblyCommands(15);
         }
 
         disAsmScreen.draw(asm_vec);
