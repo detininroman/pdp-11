@@ -108,12 +108,10 @@ int main(int argc, char *argv[]) {
             asm_str += cmd + "\n";
         }
 
-        // TODO: create similar interface
         std::string byte_code_str;
-        auto byte_code_vec = Emulator::instance().getByteCode();
-        auto size = byte_code_vec.size();
-        for (int i = size - 33; i < size; i++) {
-            byte_code_str += byte_code_vec[i] + "\n";
+        auto byte_code_vec = Emulator::instance().getByteCode(33);
+        for (auto cmd : byte_code_vec) {
+            byte_code_str += cmd + "\n";
         }
 
         disasm_screen.draw(asm_str);

@@ -44,18 +44,29 @@ size_t Emulator::getROM(uint8_t *buff, size_t size) const {
     return memory.getROM(buff, size);
 }
 
-std::vector<std::string> Emulator::getByteCode() const {
+std::vector <std::string> Emulator::getByteCode() const {
     return byteCode;
+}
+
+std::vector <std::string> Emulator::getByteCode(int n) const {
+    std::vector <std::string> byte_code = getByteCode();
+    std::vector <std::string> res;
+
+    int size = byte_code.size();
+    for (int i = size - n; i < size; i++) {
+        res.push_back(byte_code[i]);
+    }
+    return res;
 }
 
 std::string Emulator::getAssembly() const {
     return assembly.str();
 }
 
-std::vector<std::string> Emulator::getAssemblyCommands() const {
+std::vector <std::string> Emulator::getAssemblyCommands() const {
     std::string cmd;
     std::stringstream ss(getAssembly());
-    std::vector<std::string> commands;
+    std::vector <std::string> commands;
 
     while (std::getline(ss, cmd, '\n')) {
         commands.push_back(cmd);
@@ -63,9 +74,9 @@ std::vector<std::string> Emulator::getAssemblyCommands() const {
     return commands;
 }
 
-std::vector<std::string> Emulator::getAssemblyCommands(int n) const {
-    std::vector<std::string> vec = getAssemblyCommands();
-    std::vector<std::string> res;
+std::vector <std::string> Emulator::getAssemblyCommands(int n) const {
+    std::vector <std::string> vec = getAssemblyCommands();
+    std::vector <std::string> res;
     int size = vec.size();
 
     for (int i = size - n; i < size; i++) {
@@ -83,7 +94,7 @@ Error Emulator::initROM(std::string fileName) {
     std::ifstream::pos_type end_pos = codeStream.tellg();
     int len = codeStream.tellg();
     codeStream.seekg(0, std::ios::beg);
-    std::unique_ptr<uint8_t> mem(new uint8_t[len]);
+    std::unique_ptr <uint8_t> mem(new uint8_t[len]);
     codeStream.read(reinterpret_cast<char *>(mem.get()), end_pos);
 
     if (memory.init(mem.get(), len) != Error::OK) {
