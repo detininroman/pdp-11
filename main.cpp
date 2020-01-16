@@ -7,6 +7,8 @@
 #include "gui/Screen.hpp"
 #include "gui/Button.hpp"
 #include "gui/GUIObject.hpp"
+#include "gui/disasm_screen.hpp"
+#include "gui/vram_screen.hpp"
 
 
 int main() {
@@ -17,9 +19,9 @@ int main() {
 
     sf::Color darkGray = sf::Color(34, 34, 34);
 
-    Screen vRam(&window, 1050, 600, 50, 50, ScreenType::VRAM_SCREEN);
+    VRamScreen vRam(&window, 1050, 600, 50, 50, ScreenType::VRAM_SCREEN);
+    DisAsmScreen disAsmScreen(&window, 700, 600, 1150, 700, ScreenType::DISASM_SCREEN);
     Screen byteCodeScreen(&window, 700, 600, 1150, 50, ScreenType::BYTECODE_SCREEN);
-    Screen disAsmScreen(&window, 700, 600, 1150, 700, ScreenType::DISASM_SCREEN);
 
     Button runButton(&window, font, 310, 70, 450, 1150, ButtonType::RUN);
     Button stopButton(&window, font, 310, 70, 450, 1225, ButtonType::STOP);
