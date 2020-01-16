@@ -12,6 +12,7 @@ sf::Color black = sf::Color::Black;
 
 enum PDPState {
     INACTIVE,
+    EXECUTE,
     AUTO,
     MANUAL,
     STOPPED,
@@ -41,7 +42,7 @@ enum ButtonType {
     REG5,
     REG6,
     REG7,
-    RUN,
+    EXEC,
     STEP,
     STOP,
     START,
@@ -53,6 +54,7 @@ enum ButtonType {
     CONV,
     TICKS_PIPE,
     TICKS_NO_PIPE,
+    RESET,
 };
 
 std::unordered_map <ButtonType, sf::String> button_names = {
@@ -67,13 +69,14 @@ std::unordered_map <ButtonType, sf::String> button_names = {
         {START,         "Start"},
         {STOP,          "Stop"},
         {STEP,          "Step"},
-        {RUN,           "Run"},
+        {EXEC,          "Execute"},
         {N_FLAG,        "N:"},
         {Z_FLAG,        "Z:"},
         {V_FLAG,        "V:"},
         {C_FLAG,        "C:"},
         {SYNC,          "Sync"},
         {CONV,          "Conv"},
-        {TICKS_PIPE,    "Ticks (pipe):"},
+        {TICKS_PIPE,    "Ticks:"},
         {TICKS_NO_PIPE, "Ticks:"},
+        {RESET,         "Reset"},
 };
