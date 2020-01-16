@@ -109,8 +109,6 @@ Error sob(struct Registers *registers, uint16_t *operand1, uint16_t *operand2) {
     (*operand1)--;
     if (*operand1 != 0) {
         registers->pc -= 2 * *operand2;
-        // To compensate PC += 2 in the end of emulation step.
-        registers->pc -= 2;
     }
     return Error::OK;
 }

@@ -54,8 +54,45 @@ size_t Emulator::getROM(uint8_t *buff, size_t size) const {
     return memory.getROM(buff, size);
 }
 
+std::vector <std::string> Emulator::getByteCode() const {
+    return byteCode;
+}
+
+std::vector <std::string> Emulator::getByteCode(int n) const {
+    std::vector <std::string> byte_code = getByteCode();
+    std::vector <std::string> res;
+
+    int size = byte_code.size();
+    for (int i = size - n; i < size; i++) {
+        res.push_back(byte_code[i]);
+    }
+    return res;
+}
+
 std::string Emulator::getAssembly() const {
     return assembly.str();
+}
+
+std::vector <std::string> Emulator::getAssemblyCommands() const {
+    std::string cmd;
+    std::stringstream ss(getAssembly());
+    std::vector <std::string> commands;
+
+    while (std::getline(ss, cmd, '\n')) {
+        commands.push_back(cmd);
+    }
+    return commands;
+}
+
+std::vector <std::string> Emulator::getAssemblyCommands(int n) const {
+    std::vector <std::string> vec = getAssemblyCommands();
+    std::vector <std::string> res;
+    int size = vec.size();
+
+    for (int i = size - n; i < size; i++) {
+        res.push_back(vec[i]);
+    }
+    return res;
 }
 
 Error Emulator::initROM(std::string fileName) {
@@ -97,6 +134,10 @@ void Emulator::fetch() {
     //emulator_state.fetched_bytes = ((*memory_pointer & 0x00FF) << 8) | ((*memory_pointer & 0xFF00) >> 8);
     emulator_state.fetched_bytes = *memory_pointer;
     memory.registers.pc += 2;
+
+    std::stringstream cmd;
+    cmd << "0x" << std::hex << emulator_state.fetched_bytes;
+    byteCode.push_back(cmd.str());
 }
 
 void Emulator::decode() {
@@ -291,7 +332,8 @@ uint16_t *Emulator::pullOutAddress(uint8_t reg_num, uint8_t mode_num) {
                 uint16_t *address2 = nullptr;
                 if (memory.getWordAddress((*reg_pointer + 2), &address2) == Error::OK) { // following word
                     uint16_t *output_address = nullptr;
-                    if (memory.getWordAddress((*address + *address2), &output_address) == Error::OK) { // by summ of addr
+                    if (memory.getWordAddress((*address + *address2), &output_address) ==
+                        Error::OK) { // by summ of addr
                         return output_address;
                     } else {
                         return nullptr; // Take care

@@ -4,32 +4,37 @@
 #include "emulator/emulator.hpp"
 #include "emulator/params.hpp"
 #include "gui/params.hpp"
-#include "gui/Screen.hpp"
-#include "gui/Button.hpp"
-#include "gui/GUIObject.hpp"
+#include "gui/screen.hpp"
+#include "gui/button.hpp"
+#include "gui/GUI_object.hpp"
+#include "gui/text_screen.hpp"
+#include "gui/vram_screen.hpp"
+#include "misc/bit_array.hpp"
 
 
-int main() {
+int main(int argc, char *argv[]) {
+    std::string binFile = argc > 1 ? argv[1] : "programs/white_screen";
+
     sf::RenderWindow window(sf::VideoMode(1900, 1350), "PDP-11");
+
+    PDPState state = PDPState::INACTIVE;
 
     sf::Font font;
     font.loadFromFile("./resources/helvetica.ttf");
 
-    sf::Color darkGray = sf::Color(34, 34, 34);
+    VRamScreen vram_screen(&window, 1050, 600, 50, 50, ScreenType::VRAM_SCREEN);
+    TextScreen disasm_screen(&window, 335, 1250, 1515, 50, ScreenType::DISASM_SCREEN, font);
+    TextScreen byte_code_screen(&window, 335, 1250, 1150, 50, ScreenType::BYTECODE_SCREEN, font);
 
-    Screen vRam(&window, 1050, 600, 50, 50, ScreenType::VRAM_SCREEN);
-    Screen byteCodeScreen(&window, 700, 600, 1150, 50, ScreenType::BYTECODE_SCREEN);
-    Screen disAsmScreen(&window, 700, 600, 1150, 700, ScreenType::DISASM_SCREEN);
+    Button run_button(&window, font, 310, 70, 450, 1150, ButtonType::RUN);
+    Button stop_button(&window, font, 310, 70, 450, 1225, ButtonType::STOP);
+    Button step_button(&window, font, 310, 70, 790, 1150, ButtonType::STEP);
+    Button start_button(&window, font, 310, 70, 790, 1225, ButtonType::START);
 
-    Button runButton(&window, font, 310, 70, 450, 1150, ButtonType::RUN);
-    Button stopButton(&window, font, 310, 70, 450, 1225, ButtonType::STOP);
-    Button stepButton(&window, font, 310, 70, 790, 1150, ButtonType::STEP);
-    Button startButton(&window, font, 310, 70, 790, 1225, ButtonType::START);
-
-    Button nFlag(&window, font, 70, 70, 450, 775, ButtonType::N_FLAG);
-    Button zFlag(&window, font, 70, 70, 530, 775, ButtonType::Z_FLAG);
-    Button vFlag(&window, font, 70, 70, 610, 775, ButtonType::V_FLAG);
-    Button cFlag(&window, font, 70, 70, 690, 775, ButtonType::C_FLAG);
+    Button n_flag(&window, font, 150, 70, 450, 700, ButtonType::N_FLAG);
+    Button z_flag(&window, font, 150, 70, 610, 700, ButtonType::Z_FLAG);
+    Button v_flag(&window, font, 150, 70, 790, 700, ButtonType::V_FLAG);
+    Button c_flag(&window, font, 150, 70, 950, 700, ButtonType::C_FLAG);
 
     Button R0(&window, font, 350, 70, 50, 700, ButtonType::REG0);
     Button R1(&window, font, 350, 70, 50, 775, ButtonType::REG1);
@@ -40,17 +45,15 @@ int main() {
     Button R6(&window, font, 350, 70, 50, 1150, ButtonType::REG6);
     Button R7(&window, font, 350, 70, 50, 1225, ButtonType::REG7);
 
-    Button syncButton(&window, font, 310, 70, 450, 700, ButtonType::SYNC);
-    Button conveyorButton(&window, font, 310, 70, 790, 700, ButtonType::CONV);
-    Button ticksButton(&window, font, 310, 70, 790, 775, ButtonType::TICKS);
+    Button sync_button(&window, font, 310, 70, 450, 1075, ButtonType::SYNC);
+    Button conveyor_button(&window, font, 310, 70, 790, 1075, ButtonType::CONV);
+    Button ticks_button(&window, font, 310, 70, 790, 775, ButtonType::TICKS);
 
-    auto buttons = {&startButton, &stopButton, &stepButton, &runButton, &nFlag, &zFlag, &vFlag, &cFlag,
-                    &R0, &R1, &R2, &R3, &R4, &R5, &R6, &R7, &syncButton, &conveyorButton, &ticksButton};
+    auto buttons = {&start_button, &stop_button, &step_button, &run_button, &n_flag, &z_flag, &v_flag, &c_flag,
+                    &R0, &R1, &R2, &R3, &R4, &R5, &R6, &R7, &sync_button, &conveyor_button, &ticks_button};
 
-    auto screens = {&byteCodeScreen, &disAsmScreen};
-
-    bool make_step = true;
-    Emulator::instance().initROM("programs/white_screen");
+    auto buff = new uint8_t[VIDEO_SIZE];
+    Emulator::instance().initROM(binFile);
 
     while (window.isOpen()) {
         sf::Event event;
@@ -62,45 +65,78 @@ int main() {
             }
             if (event.type == sf::Event::MouseButtonPressed) {
                 sf::Vector2i position = sf::Mouse::getPosition(window);
-                for (auto button : buttons) {
-                    if (button->rect_.contains(position)) {
-                        button->clickHandler();
-                        break;
+                if (start_button.rect_.contains(position)) {
+                    state = PDPState::AUTO;
+                } else if (step_button.rect_.contains(position)) {
+                    state = PDPState::MANUAL;
+                } else {
+                    for (auto button : buttons) {
+                        if (button->rect_.contains(position)) {
+                            button->clickHandler();
+                            break;
+                        }
                     }
-                }
-            }
-        }
-
-        if (make_step) {
-            for (int i = 0; i < 128; i++) {
-                Error step_rv = Emulator::instance().step();
-                if (step_rv == Error::FINISHED) {
-                    make_step = false;
-                    std::cout << "FINISHED" << std::endl;
-                    break;
                 }
             }
         }
 
         window.clear(darkGray);
 
-        for (auto screen: screens) {
-            screen->update();
+        if (state == PDPState::AUTO) {
+            for (int i = 0; i < 128; i++) {
+                Error step_rv = Emulator::instance().step();
+                if (step_rv == Error::FINISHED) {
+                    state = PDPState::FINISHED;
+                    std::cout << "FINISHED" << std::endl;
+                    break;
+                }
+            }
+        } else if (state == PDPState::MANUAL) {
+
         }
+
+        Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
+        BitArray screenBits(buff, VIDEO_SIZE);
+
+        /*
+        byteCodeScreen.update();
+        disAsmScreen.update();
+        vRam.update();
+         */
+
         for (auto button : buttons) {
             button->update();
         }
 
-        for (auto screen: screens) {
-            screen->draw();
-        }
         for (auto button : buttons) {
             button->draw();
         }
 
-        auto buff = new uint8_t[VIDEO_SIZE];
-        Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
-        vRam.draw(buff);
+        std::string asm_str;
+        std::string byte_code_str;
+
+        if (state != PDPState::INACTIVE) {
+            auto asm_vec = Emulator::instance().getAssemblyCommands(33);
+            for (auto cmd : asm_vec) {
+                asm_str += cmd + "\n";
+            }
+
+            auto byte_code_vec = Emulator::instance().getByteCode(33);
+            for (auto cmd : byte_code_vec) {
+                byte_code_str += cmd + "\n";
+            }
+        }
+
+
+        if (state == PDPState::INACTIVE) {
+            disasm_screen.draw();
+            byte_code_screen.draw();
+            vram_screen.draw();
+        } else {
+            disasm_screen.draw(asm_str);
+            byte_code_screen.draw(byte_code_str);
+            vram_screen.draw(buff);
+        }
 
         window.display();
     }

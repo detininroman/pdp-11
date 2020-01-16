@@ -35,7 +35,15 @@ public:
 
     size_t getROM(uint8_t *buff, size_t size) const;
 
+    std::vector <std::string> getByteCode() const;
+
+    std::vector <std::string> getByteCode(int n) const;
+
     std::string getAssembly() const;
+
+    std::vector <std::string> getAssemblyCommands() const;
+
+    std::vector <std::string> getAssemblyCommands(int n) const;
 
     uint16_t getRegister(RegisterEnum reg);
 
@@ -62,6 +70,7 @@ private:
     Pipeline pipeline;
 
     std::stringstream assembly;
+    std::vector <std::string> byteCode;
 
     void fetch();
 
