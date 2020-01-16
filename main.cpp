@@ -21,8 +21,8 @@ int main(int argc, char *argv[]) {
     font.loadFromFile("./resources/helvetica.ttf");
 
     VRamScreen vram_screen(&window, 1050, 600, 50, 50, ScreenType::VRAM_SCREEN);
-    TextScreen disasm_screen(&window, 700, 600, 1150, 700, ScreenType::DISASM_SCREEN, font);
-    TextScreen byte_code_screen(&window, 700, 600, 1150, 50, ScreenType::BYTECODE_SCREEN, font);
+    TextScreen disasm_screen(&window, 335, 1250, 1515, 50, ScreenType::DISASM_SCREEN, font);
+    TextScreen byte_code_screen(&window, 335, 1250, 1150, 50, ScreenType::BYTECODE_SCREEN, font);
 
     Button run_button(&window, font, 310, 70, 450, 1150, ButtonType::RUN);
     Button stop_button(&window, font, 310, 70, 450, 1225, ButtonType::STOP);
@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
         }
 
         std::string asm_str;
-        auto asm_vec = Emulator::instance().getAssemblyCommands(15);
+        auto asm_vec = Emulator::instance().getAssemblyCommands(33);
         for (auto cmd : asm_vec) {
             asm_str += cmd + "\n";
         }
@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
         std::string byte_code_str;
         auto byte_code_vec = Emulator::instance().getByteCode();
         auto size = byte_code_vec.size();
-        for (int i = size - 15; i < size; i++) {
+        for (int i = size - 33; i < size; i++) {
             byte_code_str += byte_code_vec[i] + "\n";
         }
 
