@@ -47,9 +47,8 @@ int main() {
     auto buttons = {&startButton, &stopButton, &stepButton, &runButton, &nFlag, &zFlag, &vFlag, &cFlag,
                     &R0, &R1, &R2, &R3, &R4, &R5, &R6, &R7, &syncButton, &conveyorButton, &ticksButton};
 
-    auto screens = {&byteCodeScreen, &disAsmScreen};
-
     bool make_step = true;
+    auto buff = new uint8_t[VIDEO_SIZE];
     Emulator::instance().initROM("programs/white_screen");
 
     while (window.isOpen()) {
@@ -80,26 +79,29 @@ int main() {
                     break;
                 }
             }
+            Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
         }
 
         window.clear(darkGray);
 
-        for (auto screen: screens) {
-            screen->update();
-        }
+        /*
+        byteCodeScreen.update();
+        disAsmScreen.update();
+        vRam.update();
+         */
+
         for (auto button : buttons) {
             button->update();
         }
 
-        for (auto screen: screens) {
-            screen->draw();
-        }
         for (auto button : buttons) {
             button->draw();
         }
 
-        auto buff = new uint8_t[VIDEO_SIZE];
-        Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
+        std::string asm_str = make_step ? Emulator::instance().getAssembly() : "";
+
+        disAsmScreen.draw(asm_str);
+        byteCodeScreen.draw();
         vRam.draw(buff);
 
         window.display();
