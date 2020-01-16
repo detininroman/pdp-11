@@ -61,6 +61,10 @@ int Pipeline::getTicksOpt() {
 }
 
 int Pipeline::getTicksNaive() {
-    while(step() == Error::OK);
+    while (!instr_history.empty()) {
+        time_naive += instr_history.back().second;
+        instr_history.pop_back();
+    }
+
     return time_naive;
 }

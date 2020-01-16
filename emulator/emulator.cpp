@@ -15,9 +15,6 @@ enum class AddressingMode {
 Emulator::~Emulator() {
 }
 
-Emulator::Emulator() {
-}
-
 Emulator &Emulator::instance() {
     static Emulator e;
     return e;

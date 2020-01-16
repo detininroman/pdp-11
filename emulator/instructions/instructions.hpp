@@ -10,7 +10,7 @@
 enum class CommandUnit {
     ALU, // If you add any new units, please init queue for them in pipeline class
     FETCH_UNIT,
-    DECODE_UNIT
+    DECODE_UNIT,
 };
 
 
