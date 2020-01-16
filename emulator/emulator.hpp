@@ -52,10 +52,6 @@ private:
 
     Emulator &operator=(Emulator const &emulator) = delete;
 
-    int ticks;
-    // TODO:: move to another class, change according to real data
-    const int defaultTicksAddCount = 50;
-
     StateVariables emulator_state;
 
     Memory memory;
