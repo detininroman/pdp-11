@@ -28,7 +28,7 @@ void DisAsmScreen::draw() {
 }
 
 void DisAsmScreen::draw(const std::string &str) {
-    Screen::draw();
+    draw();
     if (type_ != ScreenType::DISASM_SCREEN) {
         return;
     }

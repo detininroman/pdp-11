@@ -27,10 +27,11 @@ void VRamScreen::draw() {
 };
 
 void VRamScreen::draw(uint8_t *buff) {
-    Screen::draw();
+    draw();
     if (type_ != ScreenType::VRAM_SCREEN) {
         return;
     }
+
     int multiplier = 8;
     int xSize = 128;
     int ySize = 64;
