@@ -41,7 +41,10 @@ public:
 
     bool getProcessorStatusWord(ProcessorStatusWordEnum psw);
 
-    int getTicks();
+    int getTicksPipe();
+
+    int getTicksNoPipe();
+
 
 private:
     ~Emulator();

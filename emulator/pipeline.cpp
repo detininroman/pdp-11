@@ -55,10 +55,12 @@ Error Pipeline::step() {
     return Error::OK;
 }
 
-int Pipeline::getTicksOpt() const {
+int Pipeline::getTicksOpt() {
+    while(step() == Error::OK);
     return time_opt;
 }
 
-int Pipeline::getTicksNaive() const {
+int Pipeline::getTicksNaive() {
+    while(step() == Error::OK);
     return time_naive;
 }

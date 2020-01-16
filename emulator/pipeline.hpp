@@ -14,9 +14,9 @@ class Pipeline {
 public:
     Pipeline();
 
-    int getTicksOpt() const;
+    int getTicksOpt();
 
-    int getTicksNaive() const;
+    int getTicksNaive();
 
     Error add(CommandUnit device, int command_ticks);
 

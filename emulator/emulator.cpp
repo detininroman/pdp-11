@@ -23,9 +23,14 @@ Emulator &Emulator::instance() {
     return e;
 }
 
-int Emulator::getTicks() {
-    return 1488;
+int Emulator::getTicksPipe(){
+    return pipeline.getTicksOpt();
 }
+
+int Emulator::getTicksNoPipe() {
+    return pipeline.getTicksNaive();
+}
+
 
 Error Emulator::step() {
     if (memory.registers.pc == RAM_SIZE + VIDEO_SIZE + ROM_SIZE) {
@@ -36,7 +41,8 @@ Error Emulator::step() {
     decode();
     loadOperands();
     execute();
-    pipeline.step();
+    int ticks_naive = pipeline.getTicksNaive();
+    int ticks_opt = pipeline.getTicksOpt();
     return Error::OK;
 }
 
