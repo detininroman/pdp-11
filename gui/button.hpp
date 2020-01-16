@@ -44,7 +44,7 @@ Button::Button(sf::RenderWindow *window, sf::Font font, unsigned int width, unsi
     sprite_.setColor((disabled_button) ? gray : blue);
 
     text_.setFont(font_);
-    text_.setString(buttonNames[type_]);
+    text_.setString(button_names[type_]);
     text_.setCharacterSize(characterSize);
     text_.setFillColor((disabled_button) ? lightGray : black);
 
@@ -96,7 +96,7 @@ void Button::update() {
         }
         val = std::to_string(Emulator::instance().getProcessorStatusWord(flag_name));
     }
-    text_.setString(buttonNames[type_] + " " + sf::String(val));
+    text_.setString(button_names[type_] + " " + sf::String(val));
 }
 
 void Button::clickHandler() {

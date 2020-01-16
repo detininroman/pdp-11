@@ -60,22 +60,22 @@ int main(int argc, char *argv[]) {
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed ||
-                (event.type == sf::Event::KeyPressed &&
-                 event.key.code == sf::Keyboard::Escape)) {
+                (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
                 window.close();
             }
-            if (event.type == sf::Event::MouseButtonPressed) {
+            if (event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased) {
                 sf::Vector2i position = sf::Mouse::getPosition(window);
-                if (start_button.rect_.contains(position)) {
-                    state = PDPState::AUTO;
-                } else if (step_button.rect_.contains(position)) {
-                    state = PDPState::MANUAL;
-                } else {
-                    for (auto button : buttons) {
-                        if (button->rect_.contains(position)) {
-                            button->clickHandler();
-                            break;
-                        }
+                for (auto button : buttons) {
+                    if (button->rect_.contains(position)) {
+                        button->clickHandler();
+                        break;
+                    }
+                }
+                if (event.type == sf::Event::MouseButtonPressed) {
+                    if (start_button.rect_.contains(position)) {
+                        state = PDPState::AUTO;
+                    } else if (step_button.rect_.contains(position)) {
+                        state = PDPState::MANUAL;
                     }
                 }
             }
@@ -129,7 +129,7 @@ int main(int argc, char *argv[]) {
         byte_code_screen.draw(byte_code);
         vram_screen.draw(buff);
 
-        std::cout << states_map[state] << std::endl;
+//        std::cout << states_map[state] << std::endl;
         window.display();
     }
     return 0;
