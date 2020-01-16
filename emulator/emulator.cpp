@@ -24,12 +24,16 @@ int Emulator::getTicks() {
     return 1488;
 }
 
-void Emulator::step() {
+Error Emulator::step() {
+    if (memory.registers.pc == RAM_SIZE + VIDEO_SIZE + ROM_SIZE) {
+        return Error::FINISHED;
+    }
     emulator_state = StateVariables();
     fetch();
     decode();
     loadOperands();
     execute();
+    return Error::OK;
 }
 
 size_t Emulator::getVideoMemory(uint8_t *buff, size_t size) const {
@@ -102,8 +106,6 @@ void Emulator::decode() {
 }
 
 void Emulator::loadOperands() {
-    assembly << emulator_state.current_instr->name << '\t';
-
     switch (emulator_state.current_instr->type) {
         case InstructionType::CONDITIONAL_BRANCH : {
             emulator_state.offset = (emulator_state.fetched_bytes & 0b0000000011111111);
@@ -170,7 +172,7 @@ void Emulator::execute() {
             }
 
             assembly << formatOperand(emulator_state.source, emulator_state.mode_source) << ' ' <<
-                     formatOperand(emulator_state.source, emulator_state.mode_source) << '\n';
+                     formatOperand(emulator_state.dest, emulator_state.mode_dest) << '\n';
 
             break;
         }
@@ -196,7 +198,6 @@ void Emulator::execute() {
         default:
             throw std::runtime_error("Invalid operation type");
     }
-
 }
 
 uint16_t *Emulator::pullOutAddress(uint8_t reg_num, uint8_t mode_num) {
