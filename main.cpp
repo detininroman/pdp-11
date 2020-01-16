@@ -13,7 +13,7 @@
 
 
 int main(int argc, char *argv[]) {
-    std::string binFile = argc > 1 ? argv[1] : "programs/white_screen";
+    std::string binFile = argc > 1 ? argv[1] : "programs/line";
 
     sf::RenderWindow window(sf::VideoMode(1900, 1350), "PDP-11");
 
@@ -87,12 +87,16 @@ int main(int argc, char *argv[]) {
                 Error step_rv = Emulator::instance().step();
                 if (step_rv == Error::FINISHED) {
                     state = PDPState::FINISHED;
-                    std::cout << "FINISHED" << std::endl;
                     break;
                 }
             }
         } else if (state == PDPState::MANUAL) {
-
+            Error step_rv = Emulator::instance().step();
+            if (step_rv == Error::FINISHED) {
+                state = PDPState::FINISHED;
+            } else {
+                state = PDPState::STOPPED;
+            }
         }
 
         Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
@@ -112,32 +116,30 @@ int main(int argc, char *argv[]) {
             button->draw();
         }
 
-        std::string asm_str;
-        std::string byte_code_str;
 
         if (state != PDPState::INACTIVE) {
+            std::string asm_str;
             auto asm_vec = Emulator::instance().getAssemblyCommands(33);
             for (auto cmd : asm_vec) {
                 asm_str += cmd + "\n";
             }
 
+            std::string byte_code_str;
             auto byte_code_vec = Emulator::instance().getByteCode(33);
             for (auto cmd : byte_code_vec) {
                 byte_code_str += cmd + "\n";
             }
-        }
 
-
-        if (state == PDPState::INACTIVE) {
-            disasm_screen.draw();
-            byte_code_screen.draw();
-            vram_screen.draw();
-        } else {
             disasm_screen.draw(asm_str);
             byte_code_screen.draw(byte_code_str);
             vram_screen.draw(buff);
+        } else {
+            disasm_screen.draw();
+            byte_code_screen.draw();
+            vram_screen.draw();
         }
 
+        std::cout << states_map[state] << std::endl;
         window.display();
     }
     return 0;

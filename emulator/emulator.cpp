@@ -63,6 +63,7 @@ std::vector <std::string> Emulator::getByteCode(int n) const {
     std::vector <std::string> res;
 
     int size = byte_code.size();
+    n = (n < size) ? n : size;
     for (int i = size - n; i < size; i++) {
         res.push_back(byte_code[i]);
     }
@@ -87,8 +88,9 @@ std::vector <std::string> Emulator::getAssemblyCommands() const {
 std::vector <std::string> Emulator::getAssemblyCommands(int n) const {
     std::vector <std::string> vec = getAssemblyCommands();
     std::vector <std::string> res;
-    int size = vec.size();
 
+    int size = vec.size();
+    n = (n < size) ? n : size;
     for (int i = size - n; i < size; i++) {
         res.push_back(vec[i]);
     }

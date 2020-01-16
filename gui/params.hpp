@@ -14,7 +14,16 @@ enum PDPState {
     INACTIVE,
     AUTO,
     MANUAL,
+    STOPPED,
     FINISHED,
+};
+
+std::unordered_map <PDPState, std::string> states_map = {
+        {INACTIVE, "inactive"},
+        {AUTO,     "auto"},
+        {MANUAL,   "manual"},
+        {STOPPED,  "stopped"},
+        {FINISHED, "finished"},
 };
 
 enum ScreenType {
