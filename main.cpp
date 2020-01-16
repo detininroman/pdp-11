@@ -9,6 +9,7 @@
 #include "gui/GUI_object.hpp"
 #include "gui/text_screen.hpp"
 #include "gui/vram_screen.hpp"
+#include "gui/utils.hpp"
 #include "misc/bit_array.hpp"
 
 
@@ -116,28 +117,17 @@ int main(int argc, char *argv[]) {
             button->draw();
         }
 
+        std::string asm_code;
+        std::string byte_code;
 
         if (state != PDPState::INACTIVE) {
-            std::string asm_str;
-            auto asm_vec = Emulator::instance().getAssemblyCommands(33);
-            for (auto cmd : asm_vec) {
-                asm_str += cmd + "\n";
-            }
-
-            std::string byte_code_str;
-            auto byte_code_vec = Emulator::instance().getByteCode(33);
-            for (auto cmd : byte_code_vec) {
-                byte_code_str += cmd + "\n";
-            }
-
-            disasm_screen.draw(asm_str);
-            byte_code_screen.draw(byte_code_str);
-            vram_screen.draw(buff);
-        } else {
-            disasm_screen.draw();
-            byte_code_screen.draw();
-            vram_screen.draw();
+            asm_code = vec2str(Emulator::instance().getAssemblyCommands(33));
+            byte_code = vec2str(Emulator::instance().getByteCode(33));
         }
+
+        disasm_screen.draw(asm_code);
+        byte_code_screen.draw(byte_code);
+        vram_screen.draw(buff);
 
         std::cout << states_map[state] << std::endl;
         window.display();
