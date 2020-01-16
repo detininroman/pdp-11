@@ -69,8 +69,9 @@ void Button::update() {
 
     std::string val;
     if (type_ >= ButtonType::REG0 && type_ <= ButtonType::REG7) {
-        auto reg = Emulator::instance().getRegister((RegisterEnum) type_);
-        val = std::to_string(reg);
+        val = std::to_string(Emulator::instance().getRegister((RegisterEnum) type_));
+    } else if (type_ == ButtonType::TICKS) {
+        val = std::to_string(Emulator::instance().getTicks());
     } else if (type_ >= ButtonType::N_FLAG && type_ <= ButtonType::C_FLAG) {
         ProcessorStatusWordEnum flag_name;
         switch (type_) {
@@ -89,8 +90,7 @@ void Button::update() {
             default:
                 assert(0);
         }
-        auto flag_value = Emulator::instance().getProcessorStatusWord(flag_name);
-        val = std::to_string(flag_value);
+        val = std::to_string(Emulator::instance().getProcessorStatusWord(flag_name));
     }
     text_.setString(buttonNames[type_] + " " + sf::String(val));
 }
