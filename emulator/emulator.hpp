@@ -31,7 +31,7 @@ public:
 
     Error initROM(std::string fileName);
 
-    void step();
+    Error step();
 
     size_t getVideoMemory(uint8_t *buff, size_t size) const;
 
