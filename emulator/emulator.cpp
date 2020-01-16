@@ -15,14 +15,22 @@ enum class AddressingMode {
 Emulator::~Emulator() {
 }
 
+Emulator::Emulator() {
+}
+
 Emulator &Emulator::instance() {
     static Emulator e;
     return e;
 }
 
-int Emulator::getTicks() {
-    return 1488;
+int Emulator::getTicksPipe(){
+    return pipeline.getTicksOpt();
 }
+
+int Emulator::getTicksNoPipe() {
+    return pipeline.getTicksNaive();
+}
+
 
 Error Emulator::step() {
     if (memory.registers.pc == RAM_SIZE + VIDEO_SIZE + ROM_SIZE) {
@@ -33,6 +41,8 @@ Error Emulator::step() {
     decode();
     loadOperands();
     execute();
+    int ticks_naive = pipeline.getTicksNaive();
+    int ticks_opt = pipeline.getTicksOpt();
     return Error::OK;
 }
 
@@ -115,6 +125,8 @@ bool Emulator::getProcessorStatusWord(ProcessorStatusWordEnum psw) {
 }
 
 void Emulator::fetch() {
+    pipeline.add(CommandUnit::FETCH_UNIT, 2);
+
     memset(reinterpret_cast<char *>(&emulator_state.fetched_bytes), 0x0, 2);
     uint16_t *memory_pointer;
     memory.getWordAddress(memory.registers.pc, &memory_pointer);
@@ -129,6 +141,7 @@ void Emulator::fetch() {
 }
 
 void Emulator::decode() {
+    pipeline.add(CommandUnit::DECODE_UNIT, 2);
     emulator_state.current_instr = nullptr;
 
     for (auto &instr : kInstructionTable) {
@@ -208,7 +221,6 @@ void Emulator::execute() {
             uint16_t *operand2 = pullOutAddress(emulator_state.dest, emulator_state.mode_dest);
 
             if (operand1 && operand2) {
-
                 emulator_state.current_instr->callback(&memory.registers, operand1, operand2);
             }
 
@@ -239,6 +251,7 @@ void Emulator::execute() {
         default:
             throw std::runtime_error("Invalid operation type");
     }
+    pipeline.add(CommandUnit::ALU, 3);
 }
 
 uint16_t *Emulator::pullOutAddress(uint8_t reg_num, uint8_t mode_num) {

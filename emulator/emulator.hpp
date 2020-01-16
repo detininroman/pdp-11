@@ -1,5 +1,10 @@
 #pragma once
 
+#include "error.hpp"
+#include "instructions/instructions.hpp"
+#include "memory/memory.hpp"
+#include "pipeline.hpp"
+
 #include <cstring>
 #include <iostream>
 #include <stdexcept>
@@ -9,11 +14,6 @@
 #include <vector>
 #include <memory>
 #include <sstream>
-
-#include "error.hpp"
-#include "instructions/instructions.hpp"
-#include "memory/memory.hpp"
-
 
 struct StateVariables {
     uint16_t fetched_bytes;
@@ -25,8 +25,6 @@ struct StateVariables {
 
 class Emulator {
 public:
-    Emulator() = default;
-
     static Emulator &instance();
 
     Error initROM(std::string fileName);
@@ -51,10 +49,15 @@ public:
 
     bool getProcessorStatusWord(ProcessorStatusWordEnum psw);
 
-    int getTicks();
+    int getTicksPipe();
+
+    int getTicksNoPipe();
+
 
 private:
     ~Emulator();
+
+    Emulator();
 
     Emulator(Emulator const &emulator) = delete;
 
@@ -63,6 +66,8 @@ private:
     StateVariables emulator_state;
 
     Memory memory;
+
+    Pipeline pipeline;
 
     std::stringstream assembly;
     std::vector <std::string> byteCode;
@@ -74,6 +79,7 @@ private:
     void loadOperands();
 
     void execute();
+
 
     uint16_t *pullOutAddress(uint8_t reg_num, uint8_t mode_num);
 
