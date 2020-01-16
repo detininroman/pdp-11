@@ -7,6 +7,8 @@
 #include "gui/Screen.hpp"
 #include "gui/Button.hpp"
 #include "gui/GUIObject.hpp"
+#include "gui/disasm_screen.hpp"
+#include "gui/vram_screen.hpp"
 
 
 int main(int argc, char *argv[]) {
@@ -19,9 +21,9 @@ int main(int argc, char *argv[]) {
 
     sf::Color darkGray = sf::Color(34, 34, 34);
 
-    Screen vRam(&window, 1050, 600, 50, 50, ScreenType::VRAM_SCREEN);
+    VRamScreen vRam(&window, 1050, 600, 50, 50, ScreenType::VRAM_SCREEN);
+    DisAsmScreen disAsmScreen(&window, 700, 600, 1150, 700, ScreenType::DISASM_SCREEN);
     Screen byteCodeScreen(&window, 700, 600, 1150, 50, ScreenType::BYTECODE_SCREEN);
-    Screen disAsmScreen(&window, 700, 600, 1150, 700, ScreenType::DISASM_SCREEN);
 
     Button runButton(&window, font, 310, 70, 450, 1150, ButtonType::RUN);
     Button stopButton(&window, font, 310, 70, 450, 1225, ButtonType::STOP);
@@ -49,9 +51,8 @@ int main(int argc, char *argv[]) {
     auto buttons = {&startButton, &stopButton, &stepButton, &runButton, &nFlag, &zFlag, &vFlag, &cFlag,
                     &R0, &R1, &R2, &R3, &R4, &R5, &R6, &R7, &syncButton, &conveyorButton, &ticksButton};
 
-    auto screens = {&byteCodeScreen, &disAsmScreen};
-
     bool make_step = true;
+    auto buff = new uint8_t[VIDEO_SIZE];
     Emulator::instance().initROM(binFile);
 
     while (window.isOpen()) {
@@ -82,26 +83,29 @@ int main(int argc, char *argv[]) {
                     break;
                 }
             }
+            Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
         }
 
         window.clear(darkGray);
 
-        for (auto screen: screens) {
-            screen->update();
-        }
+        /*
+        byteCodeScreen.update();
+        disAsmScreen.update();
+        vRam.update();
+         */
+
         for (auto button : buttons) {
             button->update();
         }
 
-        for (auto screen: screens) {
-            screen->draw();
-        }
         for (auto button : buttons) {
             button->draw();
         }
 
-        auto buff = new uint8_t[VIDEO_SIZE];
-        Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
+        std::string asm_str = make_step ? Emulator::instance().getAssembly() : "";
+
+        disAsmScreen.draw(asm_str);
+        byteCodeScreen.draw();
         vRam.draw(buff);
 
         window.display();
