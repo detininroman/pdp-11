@@ -5,18 +5,16 @@
 #include "../emulator/params.hpp"
 #include "../emulator/emulator.hpp"
 #include "params.hpp"
-#include "GUIObject.hpp"
+#include "GUI_object.hpp"
 
 
 class Button : public GUIObject {
 private:
     sf::Font font_;
     sf::Text text_;
-    sf::Color green = sf::Color(84, 185, 143);
-    sf::Color darkGray = sf::Color(46, 46, 46);
-    sf::Color lightGray = sf::Color(172, 172, 172);
     bool clicked;
     ButtonType type_;
+    bool disabled_button;
 
 public:
     sf::IntRect rect_;
@@ -37,28 +35,30 @@ Button::Button(sf::RenderWindow *window, sf::Font font, unsigned int width, unsi
                int xLeftTop, int yLeftTop, ButtonType type, int characterSize = 36) :
         GUIObject(window), font_(font), clicked(false), type_(type),
         rect_(sf::IntRect(xLeftTop, yLeftTop, width, height)) {
+    disabled_button = (type_ >= REG0 && type_ <= REG7) || type_ == TICKS || (type_ >= N_FLAG && type_ <= C_FLAG);
 
     sf::Texture texture;
     texture.create(width, height);
     sprite_.setTexture(texture);
     sprite_.setPosition(xLeftTop, yLeftTop);
-    sprite_.setColor(darkGray);
+    sprite_.setColor((disabled_button) ? gray : blue);
 
     text_.setFont(font_);
     text_.setString(buttonNames[type_]);
     text_.setCharacterSize(characterSize);
-    text_.setFillColor(lightGray);
+    text_.setFillColor((disabled_button) ? lightGray : black);
 
     float spriteWidth = sprite_.getLocalBounds().width;
     float spriteHeight = sprite_.getLocalBounds().height;
     float textWidth = text_.getLocalBounds().width;
     float textHeight = text_.getLocalBounds().height;
 
-    bool leftAligned = (type_ >= REG0 && type_ <= REG7) || type_ == TICKS;
-    auto centered = !leftAligned;
+    auto centered = !disabled_button;
     auto shift = (centered) ? spriteWidth / 2 : textWidth / 2 + 20;
     text_.setPosition(xLeftTop + shift, yLeftTop + spriteHeight / 2);
     text_.setOrigin(textWidth / 2, textHeight / 2);
+
+
 }
 
 void Button::draw() {
@@ -67,11 +67,36 @@ void Button::draw() {
 }
 
 void Button::update() {
-    sprite_.setColor((clicked) ? green : darkGray);
-    if (type_ >= REG0 && type_ <= REG7) {
-        auto reg = Emulator::instance().getRegister((RegisterEnum) type_);
-        text_.setString(buttonNames[type_] + " " + sf::String(std::to_string(reg)));
+    if (!disabled_button) {
+        sprite_.setColor((clicked) ? green : blue);
     }
+
+    std::string val;
+    if (type_ >= ButtonType::REG0 && type_ <= ButtonType::REG7) {
+        val = std::to_string(Emulator::instance().getRegister((RegisterEnum) type_));
+    } else if (type_ == ButtonType::TICKS) {
+        val = std::to_string(Emulator::instance().getTicks());
+    } else if (type_ >= ButtonType::N_FLAG && type_ <= ButtonType::C_FLAG) {
+        ProcessorStatusWordEnum flag_name;
+        switch (type_) {
+            case ButtonType::N_FLAG:
+                flag_name = PSW_N;
+                break;
+            case ButtonType::Z_FLAG:
+                flag_name = PSW_Z;
+                break;
+            case ButtonType::V_FLAG:
+                flag_name = PSW_V;
+                break;
+            case ButtonType::C_FLAG:
+                flag_name = PSW_C;
+                break;
+            default:
+                assert(0);
+        }
+        val = std::to_string(Emulator::instance().getProcessorStatusWord(flag_name));
+    }
+    text_.setString(buttonNames[type_] + " " + sf::String(val));
 }
 
 void Button::clickHandler() {
