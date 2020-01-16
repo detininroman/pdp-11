@@ -12,9 +12,6 @@ class Button : public GUIObject {
 private:
     sf::Font font_;
     sf::Text text_;
-    sf::Color green = sf::Color(84, 185, 143);
-    sf::Color darkGray = sf::Color(46, 46, 46);
-    sf::Color lightGray = sf::Color(172, 172, 172);
     bool clicked;
     ButtonType type_;
 
@@ -42,7 +39,7 @@ Button::Button(sf::RenderWindow *window, sf::Font font, unsigned int width, unsi
     texture.create(width, height);
     sprite_.setTexture(texture);
     sprite_.setPosition(xLeftTop, yLeftTop);
-    sprite_.setColor(darkGray);
+    sprite_.setColor(gray);
 
     text_.setFont(font_);
     text_.setString(buttonNames[type_]);
@@ -67,7 +64,7 @@ void Button::draw() {
 }
 
 void Button::update() {
-    sprite_.setColor((clicked) ? green : darkGray);
+    sprite_.setColor((clicked) ? green : gray);
     if (type_ >= REG0 && type_ <= REG7) {
         auto reg = Emulator::instance().getRegister((RegisterEnum) type_);
         text_.setString(buttonNames[type_] + " " + sf::String(std::to_string(reg)));
