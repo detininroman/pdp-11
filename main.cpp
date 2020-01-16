@@ -49,11 +49,8 @@ int main() {
 
     auto screens = {&byteCodeScreen, &disAsmScreen};
 
-    Emulator::instance().initROM("emulator/rom.raw");
-    //std::cout << Emulator::instance().getProcessorStatusWord(PSW_C) << std::endl;
-
-    auto buff = new uint8_t[VIDEO_SIZE];
-    Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
+    bool make_step = true;
+    Emulator::instance().initROM("programs/white_screen");
 
     while (window.isOpen()) {
         sf::Event event;
@@ -74,6 +71,17 @@ int main() {
             }
         }
 
+        if (make_step) {
+            for (int i = 0; i < 128; i++) {
+                Error step_rv = Emulator::instance().step();
+                if (step_rv == Error::FINISHED) {
+                    make_step = false;
+                    std::cout << "FINISHED" << std::endl;
+                    break;
+                }
+            }
+        }
+
         window.clear(darkGray);
 
         for (auto screen: screens) {
@@ -90,6 +98,8 @@ int main() {
             button->draw();
         }
 
+        auto buff = new uint8_t[VIDEO_SIZE];
+        Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
         vRam.draw(buff);
 
         window.display();

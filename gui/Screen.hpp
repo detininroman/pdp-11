@@ -5,7 +5,6 @@
 #include "../emulator/params.hpp"
 
 
-
 class Screen : public GUIObject {
 private:
     sf::Color darkGray = sf::Color(46, 46, 46);
@@ -39,19 +38,21 @@ void Screen::draw() {
 void Screen::draw(uint8_t *buff) {
     draw();
     if (type_ == VRAM_SCREEN) {
-        int multiplier = 4;
-        int xSize = 128 * multiplier;
-        int ySize = 64 * multiplier;
+        int multiplier = 8;
+        int xSize = 128;
+        int ySize = 64;
 
-        sf::VertexArray arr(sf::Points, xSize * ySize);
-        for (int i = 0; i < xSize; i++) {
-            for (int j = 0; j < ySize; j++) {
-                int rawIndex = j * xSize + i;
-                int index = (j / multiplier) * xSize + (i / multiplier);
-                uint8_t val = 255 - buff[index];
-
-                arr[rawIndex] = sf::Vector2f(60 + 2 * i, 100 + 2 * j);
-                arr[rawIndex].color = sf::Color(val, val, val);
+        sf::VertexArray arr(sf::Points, xSize * ySize * multiplier * multiplier);
+        int index = 0;
+        for (int x = 0; x < xSize; x++) {
+            for (int y = 0; y < ySize; y++) {
+                uint8_t val = buff[y * xSize + x];
+                for (int i = 0; i < multiplier * multiplier; i++) {
+                    arr[index] = sf::Vector2f(60 + multiplier * x + i % multiplier,
+                                              100 + multiplier * y + i / multiplier);
+                    arr[index].color = sf::Color(val, val, val);
+                    index += 1;
+                }
             }
         }
         window_->draw(arr);
