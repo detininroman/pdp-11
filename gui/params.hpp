@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 sf::Color green = sf::Color(84, 185, 143);
+sf::Color blue = sf::Color(62, 90, 124);
 sf::Color lightGray = sf::Color(172, 172, 172);
 sf::Color gray = sf::Color(46, 46, 46);
 sf::Color darkGray = sf::Color(34, 34, 34);
