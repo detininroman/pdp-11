@@ -4,18 +4,26 @@
 
 
 class GUIObject {
-
-public:
+protected:
     sf::RenderWindow *window_;
     sf::Sprite sprite_;
 
-    GUIObject(sf::RenderWindow *window) : window_(window) {};
+public:
+
+    GUIObject(sf::RenderWindow *window);
 
     virtual ~GUIObject() {};
 
-    virtual void draw() {
-        window_->draw(sprite_);
-    }
+    virtual void draw();
 
-    virtual void update() {}
+    virtual void update();
 };
+
+GUIObject::GUIObject(sf::RenderWindow *window) : window_(window) {};
+
+void GUIObject::draw() {
+    window_->draw(sprite_);
+}
+
+void GUIObject::update() {
+}
