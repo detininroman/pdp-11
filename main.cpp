@@ -81,6 +81,8 @@ int main(int argc, char *argv[]) {
                 if (step_rv == Error::FINISHED) {
                     make_step = false;
                     std::cout << "FINISHED" << std::endl;
+
+                    std::cout << Emulator::instance().getAssembly();
                     break;
                 }
             }
