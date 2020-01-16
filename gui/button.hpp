@@ -35,7 +35,8 @@ Button::Button(sf::RenderWindow *window, sf::Font font, unsigned int width, unsi
                int xLeftTop, int yLeftTop, ButtonType type, int characterSize = 36) :
         GUIObject(window), font_(font), clicked(false), type_(type),
         rect_(sf::IntRect(xLeftTop, yLeftTop, width, height)) {
-    disabled_button = (type_ >= REG0 && type_ <= REG7) || type_ == TICKS || (type_ >= N_FLAG && type_ <= C_FLAG);
+    disabled_button = (type_ >= REG0 && type_ <= REG7) || type_ == TICKS_PIPE ||
+                      type_ == TICKS_NO_PIPE || (type_ >= N_FLAG && type_ <= C_FLAG);
 
     sf::Texture texture;
     texture.create(width, height);
@@ -74,8 +75,10 @@ void Button::update() {
     std::string val;
     if (type_ >= ButtonType::REG0 && type_ <= ButtonType::REG7) {
         val = std::to_string(Emulator::instance().getRegister((RegisterEnum) type_));
-    } else if (type_ == ButtonType::TICKS) {
-        val = std::to_string(Emulator::instance().getTicks());
+    } else if (type_ == ButtonType::TICKS_PIPE) {
+        val = std::to_string(Emulator::instance().getTicksPipe());
+    } else if (type_ == ButtonType::TICKS_NO_PIPE) {
+        val = std::to_string(Emulator::instance().getTicksNoPipe());
     } else if (type_ >= ButtonType::N_FLAG && type_ <= ButtonType::C_FLAG) {
         ProcessorStatusWordEnum flag_name;
         switch (type_) {

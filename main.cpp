@@ -48,10 +48,13 @@ int main(int argc, char *argv[]) {
 
     Button sync_button(&window, font, 310, 70, 450, 1075, ButtonType::SYNC);
     Button conveyor_button(&window, font, 310, 70, 790, 1075, ButtonType::CONV);
-    Button ticks_button(&window, font, 310, 70, 790, 775, ButtonType::TICKS);
+    Button ticks_with_pipeline(&window, font, 310, 70, 450, 775, ButtonType::TICKS_PIPE);
+    Button ticks_without_pipeline(&window, font, 310, 70, 790, 775, ButtonType::TICKS_NO_PIPE);
+
 
     auto buttons = {&start_button, &stop_button, &step_button, &run_button, &n_flag, &z_flag, &v_flag, &c_flag,
-                    &R0, &R1, &R2, &R3, &R4, &R5, &R6, &R7, &sync_button, &conveyor_button, &ticks_button};
+                    &R0, &R1, &R2, &R3, &R4, &R5, &R6, &R7, &sync_button, &conveyor_button, &ticks_with_pipeline,
+                    &ticks_without_pipeline};
 
     auto buff = new uint8_t[VIDEO_SIZE];
     Emulator::instance().initROM(binFile);
