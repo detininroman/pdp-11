@@ -90,6 +90,9 @@ static Operand parseOperand(const std::string &op) {
 }
 
 std::vector<uint16_t> Assembler::instructionToBinary(const std::vector<std::string> &instruction) {
+    if (isLiteral(instruction[0])) {
+        return {static_cast<uint16_t>(std::stoi(instruction[0], 0, 0))};
+    }
     if (kInstructions.find(instruction[0]) == kInstructions.end()) {
         throw std::runtime_error("Invalid instruction " + instruction[0]);
     }
@@ -201,6 +204,6 @@ void Assembler::generateHumanReadable(std::istream &in, const char *out_file) {
 
     std::ofstream out_stream(out_file);
     for (auto &word : result) {
-        out_stream <<std::hex << word << ' ';
+        out_stream << std::hex << word << ' ';
     }
 }
