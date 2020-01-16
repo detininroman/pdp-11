@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "GUIObject.hpp"
+#include "GUI_object.hpp"
 #include "../emulator/params.hpp"
 
 
