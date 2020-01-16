@@ -94,11 +94,9 @@ Error div(struct Registers *registers, uint16_t *operand1, uint16_t *operand2) {
 
 Error xor_(struct Registers *registers, uint16_t *operand1, uint16_t *operand2) {
     *operand2 ^= *operand1;
-
     registers->psw.N = ((*operand2 & (1 << 15)) != 0);
     registers->psw.Z = (*operand2 == 0);
     registers->psw.V = false;
-
     return Error::OK;
 }
 
