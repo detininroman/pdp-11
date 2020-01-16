@@ -13,7 +13,7 @@
 
 
 int main(int argc, char *argv[]) {
-    std::string binFile = argc > 1 ? argv[1] : "programs/white_screen";
+    std::string binFile = argc > 1 ? argv[1] : "programs/line";
 
     sf::RenderWindow window(sf::VideoMode(1900, 1350), "PDP-11");
 
@@ -29,10 +29,10 @@ int main(int argc, char *argv[]) {
     Button step_button(&window, font, 310, 70, 790, 1150, ButtonType::STEP);
     Button start_button(&window, font, 310, 70, 790, 1225, ButtonType::START);
 
-    Button n_flag(&window, font, 70, 70, 450, 775, ButtonType::N_FLAG);
-    Button z_flag(&window, font, 70, 70, 530, 775, ButtonType::Z_FLAG);
-    Button v_flag(&window, font, 70, 70, 610, 775, ButtonType::V_FLAG);
-    Button c_flag(&window, font, 70, 70, 690, 775, ButtonType::C_FLAG);
+    Button n_flag(&window, font, 150, 70, 450, 775, ButtonType::N_FLAG);
+    Button z_flag(&window, font, 150, 70, 610, 775, ButtonType::Z_FLAG);
+    Button v_flag(&window, font, 150, 70, 790, 775, ButtonType::V_FLAG);
+    Button c_flag(&window, font, 150, 70, 950, 775, ButtonType::C_FLAG);
 
     Button R0(&window, font, 350, 70, 50, 700, ButtonType::REG0);
     Button R1(&window, font, 350, 70, 50, 775, ButtonType::REG1);
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 
     Button sync_button(&window, font, 310, 70, 450, 700, ButtonType::SYNC);
     Button conveyor_button(&window, font, 310, 70, 790, 700, ButtonType::CONV);
-    Button ticks_button(&window, font, 310, 70, 790, 775, ButtonType::TICKS);
+    Button ticks_button(&window, font, 310, 70, 790, 850, ButtonType::TICKS);
 
     auto buttons = {&start_button, &stop_button, &step_button, &run_button, &n_flag, &z_flag, &v_flag, &c_flag,
                     &R0, &R1, &R2, &R3, &R4, &R5, &R6, &R7, &sync_button, &conveyor_button, &ticks_button};
