@@ -15,6 +15,9 @@ enum class AddressingMode {
 Emulator::~Emulator() {
 }
 
+Emulator::Emulator() {
+}
+
 Emulator &Emulator::instance() {
     static Emulator e;
     return e;
@@ -29,10 +32,11 @@ Error Emulator::step() {
         return Error::FINISHED;
     }
     emulator_state = StateVariables();
-    /*fetch();
+    fetch();
     decode();
     loadOperands();
-    execute();*/
+    execute();
+    pipeline.step();
     return Error::OK;
 }
 
@@ -77,7 +81,9 @@ bool Emulator::getProcessorStatusWord(ProcessorStatusWordEnum psw) {
     return *(&memory.registers.psw.N + psw);
 }
 
-void Emulator::_fetch() {
+void Emulator::fetch() {
+    pipeline.add(CommandUnit::FETCH_UNIT, 2);
+
     memset(reinterpret_cast<char *>(&emulator_state.fetched_bytes), 0x0, 2);
     uint16_t *memory_pointer;
     memory.getWordAddress(memory.registers.pc, &memory_pointer);
@@ -87,7 +93,8 @@ void Emulator::_fetch() {
     memory.registers.pc += 2;
 }
 
-void Emulator::_decode() {
+void Emulator::decode() {
+    pipeline.add(CommandUnit::DECODE_UNIT, 2);
     emulator_state.current_instr = nullptr;
 
     for (auto &instr : kInstructionTable) {
@@ -105,7 +112,7 @@ void Emulator::_decode() {
     }
 }
 
-void Emulator::_loadOperands() {
+void Emulator::loadOperands() {
     switch (emulator_state.current_instr->type) {
         case InstructionType::CONDITIONAL_BRANCH : {
             emulator_state.offset = (emulator_state.fetched_bytes & 0b0000000011111111);
@@ -152,7 +159,7 @@ void Emulator::_loadOperands() {
     }
 }
 
-void Emulator::_execute() {
+void Emulator::execute() {
     assembly << emulator_state.current_instr->name << ' ';
 
     switch (emulator_state.current_instr->type) {
@@ -167,7 +174,6 @@ void Emulator::_execute() {
             uint16_t *operand2 = pullOutAddress(emulator_state.dest, emulator_state.mode_dest);
 
             if (operand1 && operand2) {
-
                 emulator_state.current_instr->callback(&memory.registers, operand1, operand2);
             }
 
@@ -198,6 +204,7 @@ void Emulator::_execute() {
         default:
             throw std::runtime_error("Invalid operation type");
     }
+    pipeline.add(CommandUnit::ALU, 3);
 }
 
 uint16_t *Emulator::pullOutAddress(uint8_t reg_num, uint8_t mode_num) {

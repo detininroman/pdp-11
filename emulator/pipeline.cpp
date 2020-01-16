@@ -51,6 +51,7 @@ Error Pipeline::step() {
     }
     tick += 1;
     time_opt += 1;
+
     return Error::OK;
 }
 

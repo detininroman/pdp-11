@@ -3,7 +3,6 @@
 #include "error.hpp"
 #include "instructions/instructions.hpp"
 #include "memory/memory.hpp"
-#include "command_executer.hpp"
 #include "pipeline.hpp"
 
 #include <cstring>
@@ -26,8 +25,6 @@ struct StateVariables {
 
 class Emulator {
 public:
-    Emulator() = default;
-
     static Emulator &instance();
 
     Error initROM(std::string fileName);
@@ -49,6 +46,8 @@ public:
 private:
     ~Emulator();
 
+    Emulator();
+
     Emulator(Emulator const &emulator) = delete;
 
     Emulator &operator=(Emulator const &emulator) = delete;
@@ -61,15 +60,14 @@ private:
 
     std::stringstream assembly;
 
-    void _fetch();
+    void fetch();
 
-    void _decode();
+    void decode();
 
-    void _loadOperands();
+    void loadOperands();
 
-    void _execute();
+    void execute();
 
-    //Action fetch, decode, loadOperands, execute;
 
     uint16_t *pullOutAddress(uint8_t reg_num, uint8_t mode_num);
 
