@@ -11,7 +11,9 @@
 #include "gui/vram_screen.hpp"
 
 
-int main() {
+int main(int argc, char *argv[]) {
+    std::string binFile = argc > 1 ? argv[1] : "programs/line";
+
     sf::RenderWindow window(sf::VideoMode(1900, 1350), "PDP-11");
 
     sf::Font font;
@@ -51,7 +53,7 @@ int main() {
 
     bool make_step = true;
     auto buff = new uint8_t[VIDEO_SIZE];
-    Emulator::instance().initROM("programs/white_screen");
+    Emulator::instance().initROM(binFile);
 
     while (window.isOpen()) {
         sf::Event event;
