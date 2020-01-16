@@ -7,12 +7,12 @@
 #include "gui/Screen.hpp"
 #include "gui/Button.hpp"
 #include "gui/GUIObject.hpp"
-#include "gui/disasm_screen.hpp"
+#include "gui/text_screen.hpp"
 #include "gui/vram_screen.hpp"
 
 
 int main(int argc, char *argv[]) {
-    std::string binFile = argc > 1 ? argv[1] : "programs/white_screen";
+    std::string binFile = argc > 1 ? argv[1] : "programs/line";
 
     sf::RenderWindow window(sf::VideoMode(1900, 1350), "PDP-11");
 
@@ -20,8 +20,8 @@ int main(int argc, char *argv[]) {
     font.loadFromFile("./resources/helvetica.ttf");
 
     VRamScreen vRam(&window, 1050, 600, 50, 50, ScreenType::VRAM_SCREEN);
-    DisAsmScreen disAsmScreen(&window, 700, 600, 1150, 700, ScreenType::DISASM_SCREEN, font);
-    Screen byteCodeScreen(&window, 700, 600, 1150, 50, ScreenType::BYTECODE_SCREEN);
+    TextScreen disAsmScreen(&window, 700, 600, 1150, 700, ScreenType::DISASM_SCREEN, font);
+    TextScreen byteCodeScreen(&window, 700, 600, 1150, 50, ScreenType::BYTECODE_SCREEN, font);
 
     Button runButton(&window, font, 310, 70, 450, 1150, ButtonType::RUN);
     Button stopButton(&window, font, 310, 70, 450, 1225, ButtonType::STOP);
@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
                     &R0, &R1, &R2, &R3, &R4, &R5, &R6, &R7, &syncButton, &conveyorButton, &ticksButton};
 
     bool make_step = true;
-    std::vector <std::string> asm_vec;
+    std::string asm_str;
     auto buff = new uint8_t[VIDEO_SIZE];
     Emulator::instance().initROM(binFile);
 
@@ -102,11 +102,31 @@ int main(int argc, char *argv[]) {
         }
 
         if (make_step) {
-            asm_vec = Emulator::instance().getAssemblyCommands(15);
+            auto asm_vec = Emulator::instance().getAssemblyCommands(15);
+            asm_str.clear();
+            for (auto cmd : asm_vec) {
+                asm_str += cmd + "\n";
+            }
         }
 
-        disAsmScreen.draw(asm_vec);
-        byteCodeScreen.draw();
+        std::vector <std::string> byte_code_vec;
+        std::string byte_code_str;
+        for (int i = 0; i < 105; i++) {
+            byte_code_vec.push_back("0000");
+        }
+
+        int cnt = 1;
+        for (auto cmd : byte_code_vec) {
+            byte_code_str += cmd + " ";
+            if (cnt % 7 == 0) {
+                byte_code_str += "\n";
+                cnt = 0;
+            }
+            cnt += 1;
+        }
+
+        disAsmScreen.draw(asm_str);
+        byteCodeScreen.draw(byte_code_str);
         vRam.draw(buff);
 
         window.display();
