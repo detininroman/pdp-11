@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "instructions.hpp"
 #include "../params.hpp"
 
@@ -105,10 +107,11 @@ Error xor_(struct Registers *registers, uint16_t *operand1, uint16_t *operand2) 
 
 Error sob(struct Registers *registers, uint16_t *operand1, uint16_t *operand2) {
     (*operand1)--;
-    registers->pc -= 2 * *operand2;
-    // To compensate PC += 2 in the end of emulation step.
-    registers->pc -= 2;
-
+    if (*operand1 != 0) {
+        registers->pc -= 2 * *operand2;
+        // To compensate PC += 2 in the end of emulation step.
+        registers->pc -= 2;
+    }
     return Error::OK;
 }
 
