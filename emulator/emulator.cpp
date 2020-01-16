@@ -41,8 +41,8 @@ Error Emulator::step() {
     decode();
     loadOperands();
     execute();
-    int ticks_naive = pipeline.getTicksNaive();
-    int ticks_opt = pipeline.getTicksOpt();
+    pipeline.getTicksNaive();
+    pipeline.getTicksOpt();
     return Error::OK;
 }
 
