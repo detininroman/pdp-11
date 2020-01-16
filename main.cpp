@@ -9,6 +9,7 @@
 #include "gui/GUIObject.hpp"
 #include "gui/disasm_screen.hpp"
 #include "gui/vram_screen.hpp"
+#include "misc/bit_array.hpp"
 
 
 int main(int argc, char *argv[]) {
@@ -84,6 +85,7 @@ int main(int argc, char *argv[]) {
                 }
             }
             Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
+            BitArray screenBits(buff, VIDEO_SIZE);
         }
 
         window.clear(darkGray);
