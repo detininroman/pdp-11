@@ -53,6 +53,8 @@ public:
 
     int getTicksNoPipe();
 
+    int getTicks();
+
 
 private:
     ~Emulator();
