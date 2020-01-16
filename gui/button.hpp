@@ -5,7 +5,7 @@
 #include "../emulator/params.hpp"
 #include "../emulator/emulator.hpp"
 #include "params.hpp"
-#include "GUIObject.hpp"
+#include "GUI_object.hpp"
 
 
 class Button : public GUIObject {
