@@ -14,6 +14,7 @@ private:
     sf::Text text_;
     bool clicked;
     ButtonType type_;
+    bool disabled_button;
 
 public:
     sf::IntRect rect_;
@@ -34,28 +35,30 @@ Button::Button(sf::RenderWindow *window, sf::Font font, unsigned int width, unsi
                int xLeftTop, int yLeftTop, ButtonType type, int characterSize = 36) :
         GUIObject(window), font_(font), clicked(false), type_(type),
         rect_(sf::IntRect(xLeftTop, yLeftTop, width, height)) {
+    disabled_button = (type_ >= REG0 && type_ <= REG7) || type_ == TICKS || (type_ >= N_FLAG && type_ <= C_FLAG);
 
     sf::Texture texture;
     texture.create(width, height);
     sprite_.setTexture(texture);
     sprite_.setPosition(xLeftTop, yLeftTop);
-    sprite_.setColor(gray);
+    sprite_.setColor((disabled_button) ? gray : blue);
 
     text_.setFont(font_);
     text_.setString(buttonNames[type_]);
     text_.setCharacterSize(characterSize);
-    text_.setFillColor(lightGray);
+    text_.setFillColor((disabled_button) ? lightGray : black);
 
     float spriteWidth = sprite_.getLocalBounds().width;
     float spriteHeight = sprite_.getLocalBounds().height;
     float textWidth = text_.getLocalBounds().width;
     float textHeight = text_.getLocalBounds().height;
 
-    bool leftAligned = (type_ >= REG0 && type_ <= REG7) || type_ == TICKS || (type_ >= N_FLAG && type_ <= C_FLAG);
-    auto centered = !leftAligned;
+    auto centered = !disabled_button;
     auto shift = (centered) ? spriteWidth / 2 : textWidth / 2 + 20;
     text_.setPosition(xLeftTop + shift, yLeftTop + spriteHeight / 2);
     text_.setOrigin(textWidth / 2, textHeight / 2);
+
+
 }
 
 void Button::draw() {
@@ -64,8 +67,9 @@ void Button::draw() {
 }
 
 void Button::update() {
-    sprite_.setColor((clicked) ? green : gray);
-    text_.setFillColor((clicked) ? black : lightGray);
+    if (!disabled_button) {
+        sprite_.setColor((clicked) ? green : blue);
+    }
 
     std::string val;
     if (type_ >= ButtonType::REG0 && type_ <= ButtonType::REG7) {
