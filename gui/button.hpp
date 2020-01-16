@@ -51,7 +51,7 @@ Button::Button(sf::RenderWindow *window, sf::Font font, unsigned int width, unsi
     float textWidth = text_.getLocalBounds().width;
     float textHeight = text_.getLocalBounds().height;
 
-    bool leftAligned = (type_ >= REG0 && type_ <= REG7) || type_ == TICKS;
+    bool leftAligned = (type_ >= REG0 && type_ <= REG7) || type_ == TICKS || (type_ >= N_FLAG && type_ <= C_FLAG);
     auto centered = !leftAligned;
     auto shift = (centered) ? spriteWidth / 2 : textWidth / 2 + 20;
     text_.setPosition(xLeftTop + shift, yLeftTop + spriteHeight / 2);
@@ -65,10 +65,34 @@ void Button::draw() {
 
 void Button::update() {
     sprite_.setColor((clicked) ? green : gray);
-    if (type_ >= REG0 && type_ <= REG7) {
+    text_.setFillColor((clicked) ? black : lightGray);
+
+    std::string val;
+    if (type_ >= ButtonType::REG0 && type_ <= ButtonType::REG7) {
         auto reg = Emulator::instance().getRegister((RegisterEnum) type_);
-        text_.setString(buttonNames[type_] + " " + sf::String(std::to_string(reg)));
+        val = std::to_string(reg);
+    } else if (type_ >= ButtonType::N_FLAG && type_ <= ButtonType::C_FLAG) {
+        ProcessorStatusWordEnum flag_name;
+        switch (type_) {
+            case ButtonType::N_FLAG:
+                flag_name = PSW_N;
+                break;
+            case ButtonType::Z_FLAG:
+                flag_name = PSW_Z;
+                break;
+            case ButtonType::V_FLAG:
+                flag_name = PSW_V;
+                break;
+            case ButtonType::C_FLAG:
+                flag_name = PSW_C;
+                break;
+            default:
+                assert(0);
+        }
+        auto flag_value = Emulator::instance().getProcessorStatusWord(flag_name);
+        val = std::to_string(flag_value);
     }
+    text_.setString(buttonNames[type_] + " " + sf::String(val));
 }
 
 void Button::clickHandler() {

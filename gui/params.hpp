@@ -7,6 +7,7 @@ sf::Color green = sf::Color(84, 185, 143);
 sf::Color lightGray = sf::Color(172, 172, 172);
 sf::Color gray = sf::Color(46, 46, 46);
 sf::Color darkGray = sf::Color(34, 34, 34);
+sf::Color black = sf::Color::Black;
 
 enum ScreenType {
     VRAM_SCREEN,
@@ -49,10 +50,10 @@ std::unordered_map <ButtonType, sf::String> buttonNames = {
         {STOP,   "Stop"},
         {STEP,   "Step"},
         {RUN,    "Run"},
-        {N_FLAG, "N"},
-        {Z_FLAG, "Z"},
-        {V_FLAG, "V"},
-        {C_FLAG, "C"},
+        {N_FLAG, "N:"},
+        {Z_FLAG, "Z:"},
+        {V_FLAG, "V:"},
+        {C_FLAG, "C:"},
         {SYNC,   "Sync"},
         {CONV,   "Conv"},
         {TICKS,  "Ticks:"},
