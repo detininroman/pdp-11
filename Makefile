@@ -2,7 +2,7 @@ CXX = g++
 TARGET = pdp.bin
 CXX_FLAGS = -Wall -pedantic -O2 -std=c++17 -c
 SFML_FLAGS = -lsfml-graphics -lsfml-window -lsfml-system
-OBJECTS = main.o emulator/emulator.o emulator/instructions.o emulator/memory.o
+OBJECTS = main.o emulator/emulator.o emulator/instructions.o emulator/memory.o emulator/pipeline.o
 DEPS = ./gui/Screen.hpp ./gui/GUIObject.hpp ./gui/Button.hpp
 
 all: emul $(TARGET)
