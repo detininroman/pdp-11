@@ -29,10 +29,10 @@ Error Emulator::step() {
         return Error::FINISHED;
     }
     emulator_state = StateVariables();
-    fetch();
+    /*fetch();
     decode();
     loadOperands();
-    execute();
+    execute();*/
     return Error::OK;
 }
 
@@ -77,7 +77,7 @@ bool Emulator::getProcessorStatusWord(ProcessorStatusWordEnum psw) {
     return *(&memory.registers.psw.N + psw);
 }
 
-void Emulator::fetch() {
+void Emulator::_fetch() {
     memset(reinterpret_cast<char *>(&emulator_state.fetched_bytes), 0x0, 2);
     uint16_t *memory_pointer;
     memory.getWordAddress(memory.registers.pc, &memory_pointer);
@@ -87,7 +87,7 @@ void Emulator::fetch() {
     memory.registers.pc += 2;
 }
 
-void Emulator::decode() {
+void Emulator::_decode() {
     emulator_state.current_instr = nullptr;
 
     for (auto &instr : kInstructionTable) {
@@ -105,7 +105,7 @@ void Emulator::decode() {
     }
 }
 
-void Emulator::loadOperands() {
+void Emulator::_loadOperands() {
     switch (emulator_state.current_instr->type) {
         case InstructionType::CONDITIONAL_BRANCH : {
             emulator_state.offset = (emulator_state.fetched_bytes & 0b0000000011111111);
@@ -152,7 +152,7 @@ void Emulator::loadOperands() {
     }
 }
 
-void Emulator::execute() {
+void Emulator::_execute() {
     assembly << emulator_state.current_instr->name << ' ';
 
     switch (emulator_state.current_instr->type) {

@@ -1,7 +1,7 @@
 CXX = g++
 CXX_FLAGS = -Wall -pedantic -O2 -std=c++17 -Werror
-SRC = emulator.cpp memory/memory.cpp instructions/instructions.cpp
-INC = emulator.hpp memory/memory.hpp instructions/instructions.hpp
+SRC = emulator.cpp memory/memory.cpp instructions/instructions.cpp pipeline.cpp
+INC = emulator.hpp memory/memory.hpp instructions/instructions.hpp command_executer.hpp pipeline.hpp
 TARGET = emulator
 
 all: $(TARGET)

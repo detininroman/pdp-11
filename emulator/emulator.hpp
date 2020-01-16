@@ -1,5 +1,11 @@
 #pragma once
 
+#include "error.hpp"
+#include "instructions/instructions.hpp"
+#include "memory/memory.hpp"
+#include "command_executer.hpp"
+#include "pipeline.hpp"
+
 #include <cstring>
 #include <iostream>
 #include <stdexcept>
@@ -9,11 +15,6 @@
 #include <vector>
 #include <memory>
 #include <sstream>
-
-#include "error.hpp"
-#include "instructions/instructions.hpp"
-#include "memory/memory.hpp"
-
 
 struct StateVariables {
     uint16_t fetched_bytes;
@@ -56,15 +57,19 @@ private:
 
     Memory memory;
 
+    Pipeline pipeline;
+
     std::stringstream assembly;
 
-    void fetch();
+    void _fetch();
 
-    void decode();
+    void _decode();
 
-    void loadOperands();
+    void _loadOperands();
 
-    void execute();
+    void _execute();
+
+    //Action fetch, decode, loadOperands, execute;
 
     uint16_t *pullOutAddress(uint8_t reg_num, uint8_t mode_num);
 
