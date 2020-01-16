@@ -48,6 +48,28 @@ std::string Emulator::getAssembly() const {
     return assembly.str();
 }
 
+std::vector <std::string> Emulator::getAssemblyCommands() const {
+    std::string cmd;
+    std::stringstream ss(getAssembly());
+    std::vector <std::string> commands;
+
+    while (std::getline(ss, cmd, '\n')) {
+        commands.push_back(cmd);
+    }
+    return commands;
+}
+
+std::vector <std::string> Emulator::getAssemblyCommands(int n) const {
+    std::vector <std::string> vec = getAssemblyCommands();
+    std::vector <std::string> res;
+    int size = vec.size();
+
+    for (int i = size - n; i < size; i++) {
+        res.push_back(vec[i]);
+    }
+    return res;
+}
+
 Error Emulator::initROM(std::string fileName) {
     std::ifstream codeStream(fileName, std::ios::binary | std::ios::ate);
     if (!codeStream.is_open()) {
@@ -278,7 +300,8 @@ uint16_t *Emulator::pullOutAddress(uint8_t reg_num, uint8_t mode_num) {
                 uint16_t *address2 = nullptr;
                 if (memory.getWordAddress((*reg_pointer + 2), &address2) == Error::OK) { // following word
                     uint16_t *output_address = nullptr;
-                    if (memory.getWordAddress((*address + *address2), &output_address) == Error::OK) { // by summ of addr
+                    if (memory.getWordAddress((*address + *address2), &output_address) ==
+                        Error::OK) { // by summ of addr
                         return output_address;
                     } else {
                         return nullptr; // Take care

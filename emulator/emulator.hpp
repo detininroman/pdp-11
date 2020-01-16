@@ -39,6 +39,10 @@ public:
 
     std::string getAssembly() const;
 
+    std::vector <std::string> getAssemblyCommands() const;
+
+    std::vector <std::string> getAssemblyCommands(int n) const;
+
     uint16_t getRegister(RegisterEnum reg);
 
     bool getProcessorStatusWord(ProcessorStatusWordEnum psw);
