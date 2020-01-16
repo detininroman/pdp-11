@@ -15,7 +15,7 @@ public:
     DisAsmScreen(sf::RenderWindow *window, unsigned int width, unsigned int height,
                  int xLeftTop, int yLeftTop, ScreenType type);
 
-    void draw(const std::string &str);
+    void draw(const std::vector <std::string> &commands);
 
 };
 
@@ -27,13 +27,16 @@ void DisAsmScreen::draw() {
     Screen::draw();
 }
 
-void DisAsmScreen::draw(const std::string &str) {
+void DisAsmScreen::draw(const std::vector <std::string> &commands) {
     draw();
     if (type_ != ScreenType::DISASM_SCREEN) {
         return;
     }
-    if (str == "") {
+    if (commands.empty()) {
         return;
     }
-    std::cout << str << std::endl;
+    for (auto cmd : commands) {
+        std::cout << cmd << std::endl;
+    }
+    std::cout << "_________" << std::endl;
 }

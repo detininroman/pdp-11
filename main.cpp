@@ -13,7 +13,7 @@
 
 
 int main(int argc, char *argv[]) {
-    std::string binFile = argc > 1 ? argv[1] : "programs/line";
+    std::string binFile = argc > 1 ? argv[1] : "programs/white_screen";
 
     sf::RenderWindow window(sf::VideoMode(1900, 1350), "PDP-11");
 
@@ -104,9 +104,12 @@ int main(int argc, char *argv[]) {
             button->draw();
         }
 
-        std::string asm_str = make_step ? Emulator::instance().getAssembly() : "";
+        std::vector <std::string> asm_vec;
+        if (make_step) {
+            asm_vec = Emulator::instance().getAssemblyCommands(10);
+        }
 
-        disAsmScreen.draw(asm_str);
+        disAsmScreen.draw(asm_vec);
         byteCodeScreen.draw();
         vRam.draw(buff);
 
