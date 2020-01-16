@@ -13,9 +13,11 @@
 
 
 int main(int argc, char *argv[]) {
-    std::string binFile = argc > 1 ? argv[1] : "programs/line";
+    std::string binFile = argc > 1 ? argv[1] : "programs/white_screen";
 
     sf::RenderWindow window(sf::VideoMode(1900, 1350), "PDP-11");
+
+    PDPState state = PDPState::INACTIVE;
 
     sf::Font font;
     font.loadFromFile("./resources/helvetica.ttf");
@@ -50,7 +52,6 @@ int main(int argc, char *argv[]) {
     auto buttons = {&start_button, &stop_button, &step_button, &run_button, &n_flag, &z_flag, &v_flag, &c_flag,
                     &R0, &R1, &R2, &R3, &R4, &R5, &R6, &R7, &sync_button, &conveyor_button, &ticks_button};
 
-    bool make_step = true;
     auto buff = new uint8_t[VIDEO_SIZE];
     Emulator::instance().initROM(binFile);
 
@@ -64,29 +65,38 @@ int main(int argc, char *argv[]) {
             }
             if (event.type == sf::Event::MouseButtonPressed) {
                 sf::Vector2i position = sf::Mouse::getPosition(window);
-                for (auto button : buttons) {
-                    if (button->rect_.contains(position)) {
-                        button->clickHandler();
-                        break;
+                if (start_button.rect_.contains(position)) {
+                    state = PDPState::AUTO;
+                } else if (step_button.rect_.contains(position)) {
+                    state = PDPState::MANUAL;
+                } else {
+                    for (auto button : buttons) {
+                        if (button->rect_.contains(position)) {
+                            button->clickHandler();
+                            break;
+                        }
                     }
                 }
             }
         }
 
-        if (make_step) {
+        window.clear(darkGray);
+
+        if (state == PDPState::AUTO) {
             for (int i = 0; i < 128; i++) {
                 Error step_rv = Emulator::instance().step();
                 if (step_rv == Error::FINISHED) {
-                    make_step = false;
+                    state = PDPState::FINISHED;
                     std::cout << "FINISHED" << std::endl;
                     break;
                 }
             }
-            Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
-            BitArray screenBits(buff, VIDEO_SIZE);
+        } else if (state == PDPState::MANUAL) {
+
         }
 
-        window.clear(darkGray);
+        Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
+        BitArray screenBits(buff, VIDEO_SIZE);
 
         /*
         byteCodeScreen.update();
@@ -103,20 +113,30 @@ int main(int argc, char *argv[]) {
         }
 
         std::string asm_str;
-        auto asm_vec = Emulator::instance().getAssemblyCommands(33);
-        for (auto cmd : asm_vec) {
-            asm_str += cmd + "\n";
-        }
-
         std::string byte_code_str;
-        auto byte_code_vec = Emulator::instance().getByteCode(33);
-        for (auto cmd : byte_code_vec) {
-            byte_code_str += cmd + "\n";
+
+        if (state != PDPState::INACTIVE) {
+            auto asm_vec = Emulator::instance().getAssemblyCommands(33);
+            for (auto cmd : asm_vec) {
+                asm_str += cmd + "\n";
+            }
+
+            auto byte_code_vec = Emulator::instance().getByteCode(33);
+            for (auto cmd : byte_code_vec) {
+                byte_code_str += cmd + "\n";
+            }
         }
 
-        disasm_screen.draw(asm_str);
-        byte_code_screen.draw(byte_code_str);
-        vram_screen.draw(buff);
+
+        if (state == PDPState::INACTIVE) {
+            disasm_screen.draw();
+            byte_code_screen.draw();
+            vram_screen.draw();
+        } else {
+            disasm_screen.draw(asm_str);
+            byte_code_screen.draw(byte_code_str);
+            vram_screen.draw(buff);
+        }
 
         window.display();
     }

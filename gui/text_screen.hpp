@@ -10,14 +10,13 @@ private:
     sf::Font font_;
     sf::Text text_;
 
-    void draw();
-
 public:
     TextScreen(sf::RenderWindow *window, unsigned int width, unsigned int height,
                int xLeftTop, int yLeftTop, ScreenType type, sf::Font font, int characterSize);
 
-    void draw(const std::string &str);
+    void draw();
 
+    void draw(const std::string &str);
 };
 
 TextScreen::TextScreen(sf::RenderWindow *window, unsigned int width, unsigned int height,

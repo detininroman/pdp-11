@@ -6,16 +6,13 @@
 
 
 class VRamScreen : public Screen {
-private:
-    void draw();
-
-
 public:
     VRamScreen(sf::RenderWindow *window, unsigned int width, unsigned int height,
                int xLeftTop, int yLeftTop, ScreenType type);
 
-    void draw(uint8_t *buff);
+    void draw();
 
+    void draw(uint8_t *buff);
 };
 
 VRamScreen::VRamScreen(sf::RenderWindow *window, unsigned int width, unsigned int height,

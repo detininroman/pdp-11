@@ -10,6 +10,13 @@ sf::Color gray = sf::Color(46, 46, 46);
 sf::Color darkGray = sf::Color(34, 34, 34);
 sf::Color black = sf::Color::Black;
 
+enum PDPState {
+    INACTIVE,
+    AUTO,
+    MANUAL,
+    FINISHED,
+};
+
 enum ScreenType {
     VRAM_SCREEN,
     BYTECODE_SCREEN,
