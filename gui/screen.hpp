@@ -23,9 +23,9 @@ Screen::Screen(sf::RenderWindow *window, unsigned int width, unsigned int height
         GUIObject(window), type_(type) {
     sf::Texture texture;
     texture.create(width, height);
-    sprite_.setTexture(texture);
-    sprite_.setPosition(xLeftTop, yLeftTop);
-    sprite_.setColor(gray);
+    sprite.setTexture(texture);
+    sprite.setPosition(xLeftTop, yLeftTop);
+    sprite.setColor(gray);
 }
 
 void Screen::draw() {

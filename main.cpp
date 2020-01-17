@@ -69,21 +69,21 @@ int main(int argc, char *argv[]) {
             if (event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased) {
                 sf::Vector2i position = sf::Mouse::getPosition(window);
                 for (auto button : buttons) {
-                    if (button->rect_.contains(position)) {
+                    if (button->rect.contains(position)) {
                         button->clickHandler();
                         break;
                     }
                 }
                 if (event.type == sf::Event::MouseButtonPressed) {
-                    if (start_button.rect_.contains(position)) {
+                    if (start_button.rect.contains(position)) {
                         state = PDPState::AUTO;
-                    } else if (step_button.rect_.contains(position)) {
+                    } else if (step_button.rect.contains(position)) {
                         state = PDPState::MANUAL;
-                    } else if (stop_button.rect_.contains(position)) {
+                    } else if (stop_button.rect.contains(position)) {
                         state = PDPState::STOPPED;
-                    } else if (execute_button.rect_.contains(position)) {
+                    } else if (execute_button.rect.contains(position)) {
                         state = PDPState::EXECUTE;
-                    } else if (reset_button.rect_.contains(position)) {
+                    } else if (reset_button.rect.contains(position)) {
                         state = PDPState::INACTIVE;
                         goto restart;
                     }
@@ -91,7 +91,7 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        window.clear(darkGray);
+        window.clear(dark_gray);
 
         if (state == PDPState::AUTO) {
             for (int i = 0; i < 32; i++) {
