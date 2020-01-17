@@ -18,7 +18,7 @@ private:
 public:
     sf::IntRect rect;
 
-    Button(sf::RenderWindow *window, sf::Font& font, unsigned int width, unsigned int height,
+    Button(sf::RenderWindow *window, sf::Font &font, unsigned int width, unsigned int height,
            int x_left_top, int y_left_top, ButtonType type, int character_size);
 
     ~Button() {};
@@ -30,12 +30,12 @@ public:
     void update();
 };
 
-Button::Button(sf::RenderWindow *window, sf::Font& font, unsigned int width, unsigned int height,
+Button::Button(sf::RenderWindow *window, sf::Font &font, unsigned int width, unsigned int height,
                int x_left_top, int y_left_top, ButtonType type, int character_size = 36) :
         GUIObject(window), clicked(false), type(type),
         rect(sf::IntRect(x_left_top, y_left_top, width, height)) {
-    disabled_button = (type >= REG0 && type <= REG7) || type == TICKS_PIPE ||
-                      type == TICKS_NO_PIPE || (type >= N_FLAG && type <= C_FLAG);
+    disabled_button = (type >= REG0 && type <= REG7) || (type >= N_FLAG && type <= C_FLAG) ||
+                      type == TICKS_PIPE || type == TICKS_NO_PIPE;
 
     sf::Texture texture;
     texture.create(width, height);
@@ -57,8 +57,6 @@ Button::Button(sf::RenderWindow *window, sf::Font& font, unsigned int width, uns
     auto shift = (centered) ? spriteWidth / 2 : textWidth / 2 + 20;
     text.setPosition(x_left_top + shift, y_left_top + spriteHeight / 2);
     text.setOrigin(textWidth / 2, textHeight / 2);
-
-
 }
 
 void Button::draw() {
