@@ -42,11 +42,15 @@ public:
 
     std::vector<std::string> getByteCode(int n) const;
 
+    void cleanByteCode();
+
     std::string getAssembly() const;
 
     std::vector<std::string> getAssemblyCommands() const;
 
     std::vector<std::string> getAssemblyCommands(int n) const;
+
+    void cleanAssembly();
 
     uint16_t getRegister(RegisterEnum reg);
 

@@ -73,6 +73,10 @@ std::vector<std::string> Emulator::getByteCode(int n) const {
     return res;
 }
 
+void Emulator::cleanByteCode() {
+    byteCode = {};
+}
+
 std::string Emulator::getAssembly() const {
     return assembly.str();
 }
@@ -98,6 +102,10 @@ std::vector<std::string> Emulator::getAssemblyCommands(int n) const {
         res.push_back(vec[i]);
     }
     return res;
+}
+
+void Emulator::cleanAssembly() {
+    assembly.str(std::string());
 }
 
 Error Emulator::initROM(std::string fileName) {
