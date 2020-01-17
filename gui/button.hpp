@@ -10,7 +10,6 @@
 
 class Button : public GUIObject {
 private:
-    sf::Font font_;
     sf::Text text;
     bool clicked;
     ButtonType type;
@@ -19,7 +18,7 @@ private:
 public:
     sf::IntRect rect;
 
-    Button(sf::RenderWindow *window, sf::Font font, unsigned int width, unsigned int height,
+    Button(sf::RenderWindow *window, sf::Font& font, unsigned int width, unsigned int height,
            int x_left_top, int y_left_top, ButtonType type, int character_size);
 
     ~Button() {};
@@ -31,9 +30,9 @@ public:
     void update();
 };
 
-Button::Button(sf::RenderWindow *window, sf::Font font, unsigned int width, unsigned int height,
+Button::Button(sf::RenderWindow *window, sf::Font& font, unsigned int width, unsigned int height,
                int x_left_top, int y_left_top, ButtonType type, int character_size = 36) :
-        GUIObject(window), font_(font), clicked(false), type(type),
+        GUIObject(window), clicked(false), type(type),
         rect(sf::IntRect(x_left_top, y_left_top, width, height)) {
     disabled_button = (type >= REG0 && type <= REG7) || type == TICKS_PIPE ||
                       type == TICKS_NO_PIPE || (type >= N_FLAG && type <= C_FLAG);
@@ -44,7 +43,7 @@ Button::Button(sf::RenderWindow *window, sf::Font font, unsigned int width, unsi
     sprite.setPosition(x_left_top, y_left_top);
     sprite.setColor((disabled_button) ? gray : blue);
 
-    text.setFont(font_);
+    text.setFont(font);
     text.setString(button_names[type]);
     text.setCharacterSize(character_size);
     text.setFillColor((disabled_button) ? light_gray : black);
