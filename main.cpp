@@ -53,8 +53,6 @@ int main(int argc, char *argv[]) {
                     &n_flag, &z_flag, &v_flag, &c_flag, &R0, &R1, &R2, &R3, &R4, &R5, &R6, &R7,
                     &ticks_with_pipeline, &ticks_without_pipeline, &reset_button};
 
-    restart:
-
     Emulator::instance().initROM(binFile);
 
     while (window.isOpen()) {
@@ -83,7 +81,11 @@ int main(int argc, char *argv[]) {
                         state = PDPState::EXECUTE;
                     } else if (reset_button.rect.contains(position)) {
                         state = PDPState::INACTIVE;
-                        goto restart;
+                        Emulator::instance().initROM(binFile);
+                        Emulator::instance().cleanVideoMemory();
+                        Emulator::instance().cleanAssembly();
+                        Emulator::instance().cleanByteCode();
+                        continue;
                     }
                 }
             }
