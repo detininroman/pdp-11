@@ -41,7 +41,8 @@ Error Emulator::step() {
     decode();
     loadOperands();
     execute();
-    pipeline.step();
+
+    pipeline.count();
     return Error::OK;
 }
 

@@ -1,5 +1,4 @@
 #include<numeric>
-#include<algorithm>
 
 #include "pipeline.hpp"
 
@@ -30,47 +29,28 @@ Error Pipeline::add(PipelineStage device, int command_ticks) {
 }
 
 
-Error Pipeline::step() {
-    bool finished = true;
-
-    if (!instr_history.empty()) {
-        time_naive += instr_history.back();
-        instr_history.pop_back();
-    }
-
-    for (auto &device : devices) {  // Iterating over all devices for pipelined execution
-        if (current_timers[device]) {  // Device is busy
-            --current_timers[device];
-            continue;
+Error Pipeline::count() {
+    bool finished = false;
+    while (!finished) {
+        finished = true;
+        for (auto &device : devices) { // iterating over all devices for pipelined execution
+            if (current_timers[device]) { //device is busy
+                --current_timers[device];
+                continue;
+            }
+            if (backlog[device].empty()) { // no commands for this device yet
+                continue;
+            }
+            current_timers[device] = backlog[device].front(); // have something for device
+            backlog[device].pop();
+            finished = false;
+            time_opt++;
         }
-        if (backlog[device].empty()) {  // No commands for this device yet
-            continue;
-        }
-        current_timers[device] = backlog[device].front();  // Have something for device
-        backlog[device].pop();
-        finished = false;
     }
-    if (finished) {
-        return Error::EMPTY_BACKLOG;
-    }
-    tick += 1;
-    time_opt += 1;
-
     return Error::OK;
 }
 
 int Pipeline::getTicksOpt() {
-    std::vector<int> times;
-    for (auto &device : devices) {
-        int sum = 0;
-        while (!backlog[device].empty()) {
-            sum = sum + backlog[device].front();
-            backlog[device].pop();
-        }
-        times.push_back(current_timers[device] + sum);
-    }
-
-    time_opt += *std::max_element(times.begin(), times.end());
     return time_opt;
 }
 
