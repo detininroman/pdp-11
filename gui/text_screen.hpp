@@ -2,7 +2,10 @@
 
 #include <SFML/Graphics.hpp>
 #include "screen.hpp"
+#include "params.hpp"
+#include "utils.hpp"
 #include "../emulator/params.hpp"
+#include "../misc/bit_array.hpp"
 
 
 class TextScreen : public Screen {
@@ -15,7 +18,7 @@ public:
 
     void draw();
 
-    void update(const std::string &str);
+    void update();
 };
 
 TextScreen::TextScreen(sf::RenderWindow *window, unsigned int width, unsigned int height, int x_left_top,
@@ -33,6 +36,18 @@ void TextScreen::draw() {
     window->draw(text);
 }
 
-void TextScreen::update(const std::string &str) {
+void TextScreen::update() {
+    std::string str;
+    switch (type) {
+        case ScreenType::DISASM_SCREEN:
+            str = vec2str(Emulator::instance().getAssemblyCommands(33));
+            break;
+        case ScreenType::BYTECODE_SCREEN:
+            str = vec2str(Emulator::instance().getByteCode(33));
+            break;
+        default:
+            assert("wrong ScreenType");
+            break;
+    }
     text.setString(str);
 }
