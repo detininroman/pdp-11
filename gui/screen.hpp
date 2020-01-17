@@ -7,7 +7,7 @@
 
 class Screen : public GUIObject {
 protected:
-    ScreenType type_;
+    ScreenType type;
 
 public:
     Screen(sf::RenderWindow *window, unsigned int width, unsigned int height,
@@ -20,12 +20,12 @@ public:
 
 Screen::Screen(sf::RenderWindow *window, unsigned int width, unsigned int height,
                int xLeftTop, int yLeftTop, ScreenType type) :
-        GUIObject(window), type_(type) {
+        GUIObject(window), type(type) {
     sf::Texture texture;
     texture.create(width, height);
-    sprite_.setTexture(texture);
-    sprite_.setPosition(xLeftTop, yLeftTop);
-    sprite_.setColor(gray);
+    sprite.setTexture(texture);
+    sprite.setPosition(xLeftTop, yLeftTop);
+    sprite.setColor(gray);
 }
 
 void Screen::draw() {

@@ -5,8 +5,8 @@
 
 class GUIObject {
 protected:
-    sf::RenderWindow *window_;
-    sf::Sprite sprite_;
+    sf::RenderWindow *window;
+    sf::Sprite sprite;
 
 public:
 
@@ -16,13 +16,13 @@ public:
 
     virtual void draw();
 
-    virtual void update();
+    void update();
 };
 
-GUIObject::GUIObject(sf::RenderWindow *window) : window_(window) {};
+GUIObject::GUIObject(sf::RenderWindow *window) : window(window) {};
 
 void GUIObject::draw() {
-    window_->draw(sprite_);
+    window->draw(sprite);
 }
 
 void GUIObject::update() {

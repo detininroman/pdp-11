@@ -11,16 +11,16 @@
 class Button : public GUIObject {
 private:
     sf::Font font_;
-    sf::Text text_;
+    sf::Text text;
     bool clicked;
-    ButtonType type_;
+    ButtonType type;
     bool disabled_button;
 
 public:
-    sf::IntRect rect_;
+    sf::IntRect rect;
 
     Button(sf::RenderWindow *window, sf::Font font, unsigned int width, unsigned int height,
-           int xLeftTop, int yLeftTop, ButtonType type, int characterSize);
+           int x_left_top, int y_left_top, ButtonType type, int character_size);
 
     ~Button() {};
 
@@ -32,56 +32,56 @@ public:
 };
 
 Button::Button(sf::RenderWindow *window, sf::Font font, unsigned int width, unsigned int height,
-               int xLeftTop, int yLeftTop, ButtonType type, int characterSize = 36) :
-        GUIObject(window), font_(font), clicked(false), type_(type),
-        rect_(sf::IntRect(xLeftTop, yLeftTop, width, height)) {
-    disabled_button = (type_ >= REG0 && type_ <= REG7) || type_ == TICKS_PIPE ||
-                      type_ == TICKS_NO_PIPE || (type_ >= N_FLAG && type_ <= C_FLAG);
+               int x_left_top, int y_left_top, ButtonType type, int character_size = 36) :
+        GUIObject(window), font_(font), clicked(false), type(type),
+        rect(sf::IntRect(x_left_top, y_left_top, width, height)) {
+    disabled_button = (type >= REG0 && type <= REG7) || type == TICKS_PIPE ||
+                      type == TICKS_NO_PIPE || (type >= N_FLAG && type <= C_FLAG);
 
     sf::Texture texture;
     texture.create(width, height);
-    sprite_.setTexture(texture);
-    sprite_.setPosition(xLeftTop, yLeftTop);
-    sprite_.setColor((disabled_button) ? gray : blue);
+    sprite.setTexture(texture);
+    sprite.setPosition(x_left_top, y_left_top);
+    sprite.setColor((disabled_button) ? gray : blue);
 
-    text_.setFont(font_);
-    text_.setString(button_names[type_]);
-    text_.setCharacterSize(characterSize);
-    text_.setFillColor((disabled_button) ? lightGray : black);
+    text.setFont(font_);
+    text.setString(button_names[type]);
+    text.setCharacterSize(character_size);
+    text.setFillColor((disabled_button) ? light_gray : black);
 
-    float spriteWidth = sprite_.getLocalBounds().width;
-    float spriteHeight = sprite_.getLocalBounds().height;
-    float textWidth = text_.getLocalBounds().width;
-    float textHeight = text_.getLocalBounds().height;
+    float spriteWidth = sprite.getLocalBounds().width;
+    float spriteHeight = sprite.getLocalBounds().height;
+    float textWidth = text.getLocalBounds().width;
+    float textHeight = text.getLocalBounds().height;
 
     auto centered = !disabled_button;
     auto shift = (centered) ? spriteWidth / 2 : textWidth / 2 + 20;
-    text_.setPosition(xLeftTop + shift, yLeftTop + spriteHeight / 2);
-    text_.setOrigin(textWidth / 2, textHeight / 2);
+    text.setPosition(x_left_top + shift, y_left_top + spriteHeight / 2);
+    text.setOrigin(textWidth / 2, textHeight / 2);
 
 
 }
 
 void Button::draw() {
     GUIObject::draw();
-    window_->draw(text_);
+    window->draw(text);
 }
 
 void Button::update() {
     if (!disabled_button) {
-        sprite_.setColor((clicked) ? green : blue);
+        sprite.setColor((clicked) ? green : blue);
     }
 
     std::string val;
-    if (type_ >= ButtonType::REG0 && type_ <= ButtonType::REG7) {
-        val = std::to_string(Emulator::instance().getRegister((RegisterEnum) type_));
-    } else if (type_ == ButtonType::TICKS_PIPE) {
+    if (type >= ButtonType::REG0 && type <= ButtonType::REG7) {
+        val = std::to_string(Emulator::instance().getRegister((RegisterEnum) type));
+    } else if (type == ButtonType::TICKS_PIPE) {
         val = std::to_string(Emulator::instance().getTicksPipe());
-    } else if (type_ == ButtonType::TICKS_NO_PIPE) {
+    } else if (type == ButtonType::TICKS_NO_PIPE) {
         val = std::to_string(Emulator::instance().getTicksNoPipe());
-    } else if (type_ >= ButtonType::N_FLAG && type_ <= ButtonType::C_FLAG) {
+    } else if (type >= ButtonType::N_FLAG && type <= ButtonType::C_FLAG) {
         ProcessorStatusWordEnum flag_name;
-        switch (type_) {
+        switch (type) {
             case ButtonType::N_FLAG:
                 flag_name = PSW_N;
                 break;
@@ -99,10 +99,10 @@ void Button::update() {
         }
         val = std::to_string(Emulator::instance().getProcessorStatusWord(flag_name));
     }
-    text_.setString(button_names[type_] + " " + sf::String(val));
+    text.setString(button_names[type] + " " + sf::String(val));
 }
 
 void Button::clickHandler() {
     clicked = !clicked;
-    std::cout << "Button " << text_.getString().toAnsiString() << std::endl;
+    std::cout << "Button " << text.getString().toAnsiString() << std::endl;
 }
