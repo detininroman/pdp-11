@@ -76,6 +76,8 @@ public:
 
     size_t getROM(uint8_t *buff, size_t size) const;
 
+    void cleanVideoMemory();
+
 private:
     uint8_t *memory_cells;
 };

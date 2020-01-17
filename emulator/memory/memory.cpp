@@ -80,3 +80,7 @@ size_t Memory::getROM(uint8_t *buff, size_t size) const {
     memcpy(buff, memory_cells + RAM_SIZE + VIDEO_SIZE, actual_size);
     return actual_size;
 }
+
+void Memory::cleanVideoMemory() {
+    memcpy(memory_cells + RAM_SIZE, 0, VIDEO_SIZE);
+}

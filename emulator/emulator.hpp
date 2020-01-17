@@ -34,6 +34,8 @@ public:
 
     size_t getVideoMemory(uint8_t *buff, size_t size) const;
 
+    void cleanVideoMemory();
+
     size_t getROM(uint8_t *buff, size_t size) const;
 
     std::vector<std::string> getByteCode() const;
