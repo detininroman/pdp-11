@@ -124,15 +124,12 @@ int main(int argc, char *argv[]) {
         /*
         byteCodeScreen.update();
         disAsmScreen.update();
-        vRam.update();
          */
+
+        vram_screen.update(buff);
 
         for (auto button : buttons) {
             button->update();
-        }
-
-        for (auto button : buttons) {
-            button->draw();
         }
 
         std::string asm_code;
@@ -143,9 +140,13 @@ int main(int argc, char *argv[]) {
             byte_code = vec2str(Emulator::instance().getByteCode(33));
         }
 
+        for (auto button : buttons) {
+            button->draw();
+        }
+
         disasm_screen.draw(asm_code);
         byte_code_screen.draw(byte_code);
-        vram_screen.draw(buff);
+        vram_screen.draw();
 
 //        std::cout << states_map[state] << std::endl;
         window.display();
