@@ -26,7 +26,7 @@ private:
     int tick;
     int time_naive;
     int time_opt;
-    vector<pair<PipelineStage, int>> instr_history;
+    vector<int> instr_history;
     map<PipelineStage, queue<int>> backlog;
     map<PipelineStage, int> current_timers;
     vector<PipelineStage> devices;
