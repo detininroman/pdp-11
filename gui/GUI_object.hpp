@@ -16,7 +16,7 @@ public:
 
     virtual void draw();
 
-    virtual void update();
+    void update();
 };
 
 GUIObject::GUIObject(sf::RenderWindow *window) : window_(window) {};

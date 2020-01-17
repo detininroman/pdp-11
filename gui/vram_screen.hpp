@@ -18,8 +18,6 @@ public:
 
     void draw();
 
-    void update();
-
     void update(uint8_t *buff);
 };
 
@@ -34,18 +32,13 @@ void VRamScreen::draw() {
     window_->draw(arr);
 };
 
-void VRamScreen::update() {
-    Screen::update();
-}
-
 void VRamScreen::update(uint8_t *buff) {
     int index = 0;
     for (int x = 0; x < x_size; x++) {
         for (int y = 0; y < y_size; y++) {
             uint8_t val = buff[y * x_size + x];
             for (int i = 0; i < multiplier * multiplier; i++) {
-                arr[index] = sf::Vector2f(60 + multiplier * x + i % multiplier,
-                                          100 + multiplier * y + i / multiplier);
+                arr[index] = sf::Vector2f(60 + multiplier * x + i % multiplier, 100 + multiplier * y + i / multiplier);
                 arr[index].color = sf::Color(val, val, val);
                 index += 1;
             }

@@ -121,17 +121,6 @@ int main(int argc, char *argv[]) {
         Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
         BitArray screenBits(buff, VIDEO_SIZE);
 
-        /*
-        byteCodeScreen.update();
-        disAsmScreen.update();
-         */
-
-        vram_screen.update(buff);
-
-        for (auto button : buttons) {
-            button->update();
-        }
-
         std::string asm_code;
         std::string byte_code;
 
@@ -141,11 +130,19 @@ int main(int argc, char *argv[]) {
         }
 
         for (auto button : buttons) {
+            button->update();
+        }
+
+        disasm_screen.update(asm_code);
+        byte_code_screen.update(byte_code);
+        vram_screen.update(buff);
+
+        for (auto button : buttons) {
             button->draw();
         }
 
-        disasm_screen.draw(asm_code);
-        byte_code_screen.draw(byte_code);
+        disasm_screen.draw();
+        byte_code_screen.draw();
         vram_screen.draw();
 
 //        std::cout << states_map[state] << std::endl;
