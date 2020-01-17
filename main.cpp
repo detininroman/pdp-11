@@ -93,29 +93,27 @@ int main(int argc, char *argv[]) {
 
         window.clear(dark_gray);
 
-        if (state == PDPState::AUTO) {
-            for (int i = 0; i < 32; i++) {
-                Error step_rv = Emulator::instance().step();
-                if (step_rv == Error::FINISHED) {
-                    state = PDPState::FINISHED;
-                    break;
+        Error step_rv;
+        switch (state) {
+            case PDPState::EXECUTE:
+                for (int i = 0; i < 256; i++) {
+                    step_rv = Emulator::instance().step();
+                    if (step_rv == Error::FINISHED) {
+                        state = PDPState::FINISHED;
+                        break;
+                    }
                 }
-            }
-        } else if (state == PDPState::EXECUTE) {
-            for (int i = 0; i < 512; i++) {
-                Error step_rv = Emulator::instance().step();
-                if (step_rv == Error::FINISHED) {
-                    state = PDPState::FINISHED;
-                    break;
-                }
-            }
-        } else if (state == PDPState::MANUAL) {
-            Error step_rv = Emulator::instance().step();
-            if (step_rv == Error::FINISHED) {
-                state = PDPState::FINISHED;
-            } else {
-                state = PDPState::STOPPED;
-            }
+                break;
+            case PDPState::AUTO:
+                step_rv = Emulator::instance().step();
+                state = (step_rv != Error::FINISHED) ? PDPState::AUTO : PDPState::FINISHED;
+                break;
+            case PDPState::MANUAL:
+                step_rv = Emulator::instance().step();
+                state = (step_rv != Error::FINISHED) ? PDPState::STOPPED : PDPState::FINISHED;
+                break;
+            default:
+                break;
         }
 
         Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
