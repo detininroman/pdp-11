@@ -18,7 +18,7 @@ public:
 
     int getTicksNaive();
 
-    Error add(CommandUnit device, int command_ticks);
+    Error add(PipelineStage device, int command_ticks);
 
     Error step();
 
@@ -26,8 +26,8 @@ private:
     int tick;
     int time_naive;
     int time_opt;
-    vector<pair<CommandUnit, int>> instr_history;
-    map<CommandUnit, queue<int>> backlog;
-    map<CommandUnit, int> current_timers;
-    vector<CommandUnit> devices;
+    vector<pair<PipelineStage, int>> instr_history;
+    map<PipelineStage, queue<int>> backlog;
+    map<PipelineStage, int> current_timers;
+    vector<PipelineStage> devices;
 };

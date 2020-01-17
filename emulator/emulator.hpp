@@ -59,7 +59,7 @@ public:
 private:
     ~Emulator();
 
-    Emulator();
+    Emulator() = default;
 
     Emulator(Emulator const &emulator) = delete;
 

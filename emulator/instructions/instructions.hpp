@@ -7,10 +7,12 @@
 #include "../memory/memory.hpp"
 #include "../error.hpp"
 
-enum class CommandUnit {
-    ALU, // If you add any new units, please init queue for them in pipeline class
-    FETCH_UNIT,
-    DECODE_UNIT
+enum class PipelineStage {
+    FETCH_STAGE,
+    DECODE_STAGE,
+    EXECUTE_STAGE, // If you add any new units, please init queue for them in pipeline class
+    MEMORY_ACCESS_STAGE,
+    WRITE_BACK_STAGE,
 };
 
 
