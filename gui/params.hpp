@@ -55,6 +55,7 @@ enum ButtonType {
     TICKS_PIPE,
     TICKS_NO_PIPE,
     RESET,
+    JUSTBUTTON,
 };
 
 std::unordered_map<ButtonType, sf::String> button_names = {
@@ -79,4 +80,5 @@ std::unordered_map<ButtonType, sf::String> button_names = {
         {TICKS_PIPE,    "Ticks:"},
         {TICKS_NO_PIPE, "Ticks:"},
         {RESET,         "Reset"},
+        {JUSTBUTTON,    "Just button"},
 };
