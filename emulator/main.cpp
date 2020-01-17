@@ -1,6 +1,7 @@
+#include <stdio.h>
+#include <math.h>
+
 #include "emulator.hpp"
-#include <stdio.h>      /* printf */
-#include <math.h>       /* sqrt */
 
 uint16_t getWord(int pos, uint8_t *memory) {
     uint16_t val = (memory[pos] << 8) | (memory[pos + 1]);
@@ -13,7 +14,6 @@ void printVideo(uint8_t *video) {
     for (int a = 0; a < size; a++) {
         for (int b = 0; b < size; b += 2) {
             printf("%#04x ", getWord(a * size + b, video));
-
         }
         printf("\n");
     }
@@ -24,15 +24,13 @@ void printROM(uint8_t *ROM) {
     for (int a = 0; a < size; a++) {
         for (int b = 0; b < size; b += 2) {
             printf("%#04x ", getWord(a * size + b, ROM));
-
         }
         printf("\n");
     }
 }
 
-
 int main() {
-    Emulator::instance().initROM("../programs/white_screen2");
+    Emulator::instance().initROM("../programs/white_screen");
     uint8_t *video = new uint8_t[VIDEO_SIZE];
     uint8_t *rom = new uint8_t[VIDEO_SIZE];
     Emulator::instance().getROM(rom, ROM_SIZE);

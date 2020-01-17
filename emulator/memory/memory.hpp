@@ -33,8 +33,8 @@ struct Registers {
     uint16_t r3;
     uint16_t r4;
     uint16_t r5;
-    uint16_t sp; //  Stack Pointer.
-    uint16_t pc; //  Program Counter.
+    uint16_t sp;  // Stack Pointer.
+    uint16_t pc;  // Program Counter.
 };
 
 enum RegisterEnum {
@@ -77,7 +77,5 @@ public:
     size_t getROM(uint8_t *buff, size_t size) const;
 
 private:
-
     uint8_t *memory_cells;
-
 };

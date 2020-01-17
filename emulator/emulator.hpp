@@ -1,10 +1,5 @@
 #pragma once
 
-#include "error.hpp"
-#include "instructions/instructions.hpp"
-#include "memory/memory.hpp"
-#include "pipeline.hpp"
-
 #include <cstring>
 #include <iostream>
 #include <stdexcept>
@@ -14,6 +9,12 @@
 #include <vector>
 #include <memory>
 #include <sstream>
+
+#include "error.hpp"
+#include "instructions/instructions.hpp"
+#include "memory/memory.hpp"
+#include "pipeline.hpp"
+
 
 struct StateVariables {
     uint16_t fetched_bytes;
@@ -35,15 +36,15 @@ public:
 
     size_t getROM(uint8_t *buff, size_t size) const;
 
-    std::vector <std::string> getByteCode() const;
+    std::vector<std::string> getByteCode() const;
 
-    std::vector <std::string> getByteCode(int n) const;
+    std::vector<std::string> getByteCode(int n) const;
 
     std::string getAssembly() const;
 
-    std::vector <std::string> getAssemblyCommands() const;
+    std::vector<std::string> getAssemblyCommands() const;
 
-    std::vector <std::string> getAssemblyCommands(int n) const;
+    std::vector<std::string> getAssemblyCommands(int n) const;
 
     uint16_t getRegister(RegisterEnum reg);
 
@@ -72,7 +73,7 @@ private:
     Pipeline pipeline;
 
     std::stringstream assembly;
-    std::vector <std::string> byteCode;
+    std::vector<std::string> byteCode;
 
     void fetch();
 

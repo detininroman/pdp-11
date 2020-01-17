@@ -7,10 +7,11 @@
 #include "../memory/memory.hpp"
 #include "../error.hpp"
 
+// If you add any new units, please init queue for them in pipeline class.
 enum class PipelineStage {
     FETCH_STAGE,
     DECODE_STAGE,
-    EXECUTE_STAGE, // If you add any new units, please init queue for them in pipeline class
+    EXECUTE_STAGE,
     MEMORY_ACCESS_STAGE,
     WRITE_BACK_STAGE,
 };
@@ -25,7 +26,7 @@ enum class InstructionType {
 };
 
 struct Instruction {
-    /* Mask specifies how many first bits of 2B are related to the opcode. */
+    // Mask specifies how many first bits of 2B are related to the opcode.
     uint16_t mask;
     uint16_t opcode;
     std::string name;

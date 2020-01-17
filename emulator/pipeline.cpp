@@ -1,9 +1,10 @@
-#include "pipeline.hpp"
 #include<numeric>
 #include<algorithm>
 
+#include "pipeline.hpp"
+
 Pipeline::Pipeline() {
-    // add more devices if needed
+    // Add more devices if needed
     devices.push_back(PipelineStage::FETCH_STAGE);
     devices.push_back(PipelineStage::DECODE_STAGE);
     devices.push_back(PipelineStage::EXECUTE_STAGE);
@@ -37,15 +38,15 @@ Error Pipeline::step() {
         instr_history.pop_back();
     }
 
-    for (auto &device : devices) { // iterating over all devices for pipelined execution
-        if (current_timers[device]) { //device is busy
+    for (auto &device : devices) {  // Iterating over all devices for pipelined execution
+        if (current_timers[device]) {  // Device is busy
             --current_timers[device];
             continue;
         }
-        if (backlog[device].empty()) { // no commands for this device yet
+        if (backlog[device].empty()) {  // No commands for this device yet
             continue;
         }
-        current_timers[device] = backlog[device].front(); // have something for device
+        current_timers[device] = backlog[device].front();  // Have something for device
         backlog[device].pop();
         finished = false;
     }
@@ -70,7 +71,6 @@ int Pipeline::getTicksOpt() {
     }
 
     time_opt += *std::max_element(times.begin(), times.end());
-    //while (step() == Error::OK);
     return time_opt;
 }
 

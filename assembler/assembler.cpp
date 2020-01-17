@@ -196,7 +196,7 @@ void Assembler::generateBinary(std::istream &str, const char *out_file) {
 
 void Assembler::generateHumanReadable(std::istream &in, const char *out_file) {
     auto result = parseStream(in);
-    /* Big -> Little endian */
+    // Big -> Little endian
     for (auto &word : result) {
         uint8_t tmp = word >> 8;
         word = (word << 8) | tmp;

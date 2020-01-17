@@ -1,7 +1,4 @@
-#include <iostream>
-
 #include "instructions.hpp"
-#include "../params.hpp"
 
 Error mov(struct Registers *registers, uint16_t *operand1, uint16_t *operand2) {
     *operand2 = *operand1;

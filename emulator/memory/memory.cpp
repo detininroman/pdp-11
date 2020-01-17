@@ -49,13 +49,11 @@ Error Memory::getWordAddress(uint16_t pos, uint16_t **val) const {
         throw std::runtime_error(
                 "Address must be even if you want to get whole word");
     }
-    // returning in BigEndian, while we store in LittleEndian
-    // val = (memory_cells[pos + 1] << 8) || (memory_cells[pos] >> 8);
-    if (pos > RAM_SIZE + VIDEO_SIZE + ROM_SIZE) {
 
+    if (pos > RAM_SIZE + VIDEO_SIZE + ROM_SIZE) {
         return Error::OUT_OF_BOUNDS;
     }
-    *val = (uint16_t * ) &memory_cells[pos];
+    *val = (uint16_t *) &memory_cells[pos];
     return Error::OK;
 }
 
@@ -66,7 +64,7 @@ Error Memory::setWordValue(uint16_t pos, uint16_t val) {
 
 uint8_t *Memory::getByteAdress(uint16_t pos) const {
     if (pos > RAM_SIZE + VIDEO_SIZE + ROM_SIZE) {
-        return nullptr; // Take care
+        return nullptr;  // Take care
     }
     return &memory_cells[pos];
 }
