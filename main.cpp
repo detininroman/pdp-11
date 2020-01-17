@@ -82,10 +82,8 @@ int main(int argc, char *argv[]) {
                         state = PDPState::EXECUTE;
                     } else if (reset_button.rect.contains(position)) {
                         state = PDPState::INACTIVE;
+                        Emulator::instance().reset();
                         Emulator::instance().initROM(binFile);
-                        Emulator::instance().cleanVideoMemory();
-                        Emulator::instance().cleanAssembly();
-                        Emulator::instance().cleanByteCode();
                         continue;
                     }
                 }

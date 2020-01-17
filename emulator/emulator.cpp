@@ -29,10 +29,10 @@ int Emulator::getTicksNoPipe() {
 }
 
 void Emulator::reset() { // call initROM After!
-    memory = Memory();
     pipeline = Pipeline();
-    assembly.clear();
-    byteCode.clear();
+    cleanVideoMemory();
+    cleanByteCode();
+    cleanAssembly();
 }
 
 Error Emulator::step() {
