@@ -49,6 +49,10 @@ size_t Emulator::getVideoMemory(uint8_t *buff, size_t size) const {
     return memory.getVideoMemory(buff, size);
 }
 
+void Emulator::cleanVideoMemory() {
+    memory.cleanVideoMemory();
+}
+
 size_t Emulator::getROM(uint8_t *buff, size_t size) const {
     return memory.getROM(buff, size);
 }
