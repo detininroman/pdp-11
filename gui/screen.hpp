@@ -12,7 +12,7 @@ protected:
 
 public:
     Screen(sf::RenderWindow *window, unsigned int width, unsigned int height,
-           int xLeftTop, int yLeftTop, ScreenType type);
+           int x_left_top, int y_left_top, ScreenType type);
 
     ~Screen() {}
 
@@ -20,12 +20,12 @@ public:
 };
 
 Screen::Screen(sf::RenderWindow *window, unsigned int width, unsigned int height,
-               int xLeftTop, int yLeftTop, ScreenType type) :
+               int x_left_top, int y_left_top, ScreenType type) :
         GUIObject(window), type(type) {
     sf::Texture texture;
     texture.create(width, height);
     sprite.setTexture(texture);
-    sprite.setPosition(xLeftTop, yLeftTop);
+    sprite.setPosition(x_left_top, y_left_top);
     sprite.setColor(gray);
 }
 
