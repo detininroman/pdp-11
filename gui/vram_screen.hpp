@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+
 #include "screen.hpp"
 #include "../emulator/params.hpp"
 

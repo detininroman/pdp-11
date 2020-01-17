@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+
 #include "GUI_object.hpp"
 #include "../emulator/params.hpp"
 
@@ -13,7 +14,7 @@ public:
     Screen(sf::RenderWindow *window, unsigned int width, unsigned int height,
            int xLeftTop, int yLeftTop, ScreenType type);
 
-    ~Screen() {};
+    ~Screen() {}
 
     void draw();
 };

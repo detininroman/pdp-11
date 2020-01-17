@@ -9,10 +9,9 @@ protected:
     sf::Sprite sprite;
 
 public:
-
     GUIObject(sf::RenderWindow *window);
 
-    virtual ~GUIObject() {};
+    virtual ~GUIObject() {}
 
     virtual void draw();
 

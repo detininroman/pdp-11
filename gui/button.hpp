@@ -1,12 +1,13 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <cassert>
+#include <iostream>
+
 #include "../emulator/params.hpp"
 #include "../emulator/emulator.hpp"
 #include "params.hpp"
 #include "GUI_object.hpp"
-#include <cassert>
-#include <iostream>
 
 class Button : public GUIObject {
 private:
@@ -21,7 +22,7 @@ public:
     Button(sf::RenderWindow *window, sf::Font &font, unsigned int width, unsigned int height,
            int x_left_top, int y_left_top, ButtonType type, int character_size);
 
-    ~Button() {};
+    ~Button() {}
 
     void draw();
 

@@ -19,7 +19,7 @@ enum PDPState {
     FINISHED,
 };
 
-std::unordered_map <PDPState, std::string> states_map = {
+std::unordered_map<PDPState, std::string> states_map = {
         {INACTIVE, "inactive"},
         {AUTO,     "auto"},
         {MANUAL,   "manual"},
@@ -57,7 +57,7 @@ enum ButtonType {
     RESET,
 };
 
-std::unordered_map <ButtonType, sf::String> button_names = {
+std::unordered_map<ButtonType, sf::String> button_names = {
         {REG0,          "R0:"},
         {REG1,          "R1:"},
         {REG2,          "R2:"},
