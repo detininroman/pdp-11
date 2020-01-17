@@ -10,7 +10,6 @@
 #include "gui/text_screen.hpp"
 #include "gui/vram_screen.hpp"
 #include "gui/utils.hpp"
-#include "misc/bit_array.hpp"
 
 
 int main(int argc, char *argv[]) {
@@ -56,7 +55,6 @@ int main(int argc, char *argv[]) {
 
     restart:
 
-    auto buff = new uint8_t[VIDEO_SIZE];
     Emulator::instance().initROM(binFile);
 
     while (window.isOpen()) {
@@ -116,24 +114,13 @@ int main(int argc, char *argv[]) {
                 break;
         }
 
-        Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
-        BitArray screenBits(buff, VIDEO_SIZE);
-
-        std::string asm_code;
-        std::string byte_code;
-
-        if (state != PDPState::INACTIVE) {
-            asm_code = vec2str(Emulator::instance().getAssemblyCommands(33));
-            byte_code = vec2str(Emulator::instance().getByteCode(33));
-        }
-
         for (auto button : buttons) {
             button->update();
         }
 
-        disasm_screen.update(asm_code);
-        byte_code_screen.update(byte_code);
-        vram_screen.update(buff);
+        disasm_screen.update();
+        byte_code_screen.update();
+        vram_screen.update();
 
         for (auto button : buttons) {
             button->draw();
@@ -143,7 +130,6 @@ int main(int argc, char *argv[]) {
         byte_code_screen.draw();
         vram_screen.draw();
 
-//        std::cout << states_map[state] << std::endl;
         window.display();
     }
 
