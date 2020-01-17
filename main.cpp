@@ -31,6 +31,7 @@ int main(int argc, char *argv[]) {
     Button step_button(&window, font, 310, 70, 790, 1150, ButtonType::STEP);
     Button start_button(&window, font, 310, 70, 790, 1225, ButtonType::START);
     Button reset_button(&window, font, 310, 70, 450, 1075, ButtonType::RESET);
+    Button just_button(&window, font, 310, 70, 790, 1075, ButtonType::JUSTBUTTON);
 
     Button n_flag(&window, font, 150, 70, 450, 700, ButtonType::N_FLAG);
     Button z_flag(&window, font, 150, 70, 610, 700, ButtonType::Z_FLAG);
@@ -51,7 +52,7 @@ int main(int argc, char *argv[]) {
 
     auto buttons = {&start_button, &stop_button, &step_button, &execute_button,
                     &n_flag, &z_flag, &v_flag, &c_flag, &R0, &R1, &R2, &R3, &R4, &R5, &R6, &R7,
-                    &ticks_with_pipeline, &ticks_without_pipeline, &reset_button};
+                    &ticks_with_pipeline, &ticks_without_pipeline, &reset_button, &just_button};
 
     Emulator::instance().initROM(binFile);
 
