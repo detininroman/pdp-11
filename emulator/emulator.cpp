@@ -15,9 +15,6 @@ enum class AddressingMode {
 Emulator::~Emulator() {
 }
 
-Emulator::Emulator() {
-}
-
 Emulator &Emulator::instance() {
     static Emulator e;
     return e;
@@ -44,8 +41,7 @@ Error Emulator::step() {
     decode();
     loadOperands();
     execute();
-    pipeline.getTicksNaive();
-    pipeline.getTicksOpt();
+    pipeline.step();
     return Error::OK;
 }
 
@@ -130,7 +126,7 @@ bool Emulator::getProcessorStatusWord(ProcessorStatusWordEnum psw) {
 }
 
 void Emulator::fetch() {
-    pipeline.add(CommandUnit::FETCH_UNIT, 2);
+    pipeline.add(PipelineStage::FETCH_STAGE, FE);
 
     memset(reinterpret_cast<char *>(&emulator_state.fetched_bytes), 0x0, 2);
     uint16_t *memory_pointer;
@@ -146,7 +142,7 @@ void Emulator::fetch() {
 }
 
 void Emulator::decode() {
-    pipeline.add(CommandUnit::DECODE_UNIT, 2);
+    pipeline.add(PipelineStage::DECODE_STAGE, DE);
     emulator_state.current_instr = nullptr;
 
     for (auto &instr : kInstructionTable) {
@@ -256,7 +252,9 @@ void Emulator::execute() {
         default:
             throw std::runtime_error("Invalid operation type");
     }
-    pipeline.add(CommandUnit::ALU, 3);
+    pipeline.add(PipelineStage::EXECUTE_STAGE, EX);
+    pipeline.add(PipelineStage::MEMORY_ACCESS_STAGE, MEM);
+    pipeline.add(PipelineStage::MEMORY_ACCESS_STAGE, WB);
 }
 
 uint16_t *Emulator::pullOutAddress(uint8_t reg_num, uint8_t mode_num) {

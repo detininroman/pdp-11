@@ -1,11 +1,14 @@
 #include "pipeline.hpp"
-
+#include<numeric>
+#include<algorithm>
 
 Pipeline::Pipeline() {
     // add more devices if needed
-    devices.push_back(CommandUnit::ALU);
-    devices.push_back(CommandUnit::FETCH_UNIT);
-    devices.push_back(CommandUnit::DECODE_UNIT);
+    devices.push_back(PipelineStage::FETCH_STAGE);
+    devices.push_back(PipelineStage::DECODE_STAGE);
+    devices.push_back(PipelineStage::EXECUTE_STAGE);
+    devices.push_back(PipelineStage::MEMORY_ACCESS_STAGE);
+    devices.push_back(PipelineStage::WRITE_BACK_STAGE);
 
     for (auto &device : devices) {
         backlog[device] = queue<int>();
@@ -16,12 +19,12 @@ Pipeline::Pipeline() {
     time_opt = 0;
 }
 
-Error Pipeline::add(CommandUnit device, int command_ticks) {
+Error Pipeline::add(PipelineStage device, int command_ticks) {
     if (!backlog.count(device)) {
         return Error::UNKNOWN_DEVICE;
     }
     backlog[device].push(command_ticks);
-    instr_history.emplace_back(std::make_pair(device, command_ticks));
+    instr_history.emplace_back(command_ticks);
     return Error::OK;
 }
 
@@ -30,7 +33,7 @@ Error Pipeline::step() {
     bool finished = true;
 
     if (!instr_history.empty()) {
-        time_naive += instr_history.back().second;
+        time_naive += instr_history.back();
         instr_history.pop_back();
     }
 
@@ -56,11 +59,27 @@ Error Pipeline::step() {
 }
 
 int Pipeline::getTicksOpt() {
-    while(step() == Error::OK);
+    std::vector<int> times;
+    for (auto &device : devices) {
+        int sum = 0;
+        while (!backlog[device].empty()) {
+            sum = sum + backlog[device].front();
+            backlog[device].pop();
+        }
+        times.push_back(current_timers[device] + sum);
+    }
+
+    time_opt += *std::max_element(times.begin(), times.end());
+    //while (step() == Error::OK);
     return time_opt;
 }
 
 int Pipeline::getTicksNaive() {
-    while(step() == Error::OK);
+    time_naive += accumulate(instr_history.begin(), instr_history.end(), 0);
+    instr_history.clear();
+    while (!instr_history.empty()) {
+        time_naive += instr_history.back();
+        instr_history.pop_back();
+    }
     return time_naive;
 }

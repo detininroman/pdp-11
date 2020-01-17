@@ -1,12 +1,12 @@
 #pragma once
 
-#include <iostream>
 #include <SFML/Graphics.hpp>
 #include "../emulator/params.hpp"
 #include "../emulator/emulator.hpp"
 #include "params.hpp"
 #include "GUI_object.hpp"
-
+#include <cassert>
+#include <iostream>
 
 class Button : public GUIObject {
 private:

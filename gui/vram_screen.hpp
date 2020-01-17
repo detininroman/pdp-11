@@ -30,7 +30,7 @@ VRamScreen::VRamScreen(sf::RenderWindow *window, unsigned int width, unsigned in
 void VRamScreen::draw() {
     Screen::draw();
     window->draw(arr);
-};
+}
 
 void VRamScreen::update(uint8_t *buff) {
     int index = 0;
