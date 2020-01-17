@@ -19,7 +19,7 @@ public:
     virtual void update();
 };
 
-GUIObject::GUIObject(sf::RenderWindow *window) : window_(window) {};
+GUIObject::GUIObject(sf::RenderWindow *window) : window_(window) {}
 
 void GUIObject::draw() {
     window_->draw(sprite_);

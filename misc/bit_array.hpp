@@ -1,5 +1,10 @@
 #pragma once
 
+#include <stdexcept>
+#include <cstring>
+
+
+
 class BitArray {
 public:
     BitArray(uint8_t const *const array, size_t size);

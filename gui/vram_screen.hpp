@@ -17,11 +17,11 @@ public:
 
 VRamScreen::VRamScreen(sf::RenderWindow *window, unsigned int width, unsigned int height,
                        int xLeftTop, int yLeftTop, ScreenType type) :
-        Screen(window, width, height, xLeftTop, yLeftTop, type) {};
+        Screen(window, width, height, xLeftTop, yLeftTop, type) {}
 
 void VRamScreen::draw() {
     Screen::draw();
-};
+}
 
 void VRamScreen::draw(uint8_t *buff) {
     draw();
