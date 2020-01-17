@@ -6,45 +6,43 @@
 
 
 class VRamScreen : public Screen {
+private:
+    int x_size;
+    int y_size;
+    int multiplier;
+    sf::VertexArray arr;
+
 public:
     VRamScreen(sf::RenderWindow *window, unsigned int width, unsigned int height,
-               int xLeftTop, int yLeftTop, ScreenType type);
+               int x_left_top, int y_left_top, ScreenType type, int x_size, int y_size, int multiplier);
 
     void draw();
 
-    void draw(uint8_t *buff);
+    void update(uint8_t *buff);
 };
 
-VRamScreen::VRamScreen(sf::RenderWindow *window, unsigned int width, unsigned int height,
-                       int xLeftTop, int yLeftTop, ScreenType type) :
-        Screen(window, width, height, xLeftTop, yLeftTop, type) {}
+VRamScreen::VRamScreen(sf::RenderWindow *window, unsigned int width, unsigned int height, int x_left_top,
+                       int y_left_top, ScreenType type, int x_size = 128, int y_size = 64, int multiplier = 8) :
+        Screen(window, width, height, x_left_top, y_left_top, type),
+        x_size(x_size), y_size(y_size), multiplier(multiplier),
+        arr(sf::VertexArray(sf::Points, x_size * y_size * multiplier * multiplier)) {}
 
 void VRamScreen::draw() {
     Screen::draw();
+    window->draw(arr);
 }
 
-void VRamScreen::draw(uint8_t *buff) {
-    draw();
-    if (type_ != ScreenType::VRAM_SCREEN) {
-        return;
-    }
-
-    int multiplier = 8;
-    int xSize = 128;
-    int ySize = 64;
-
-    sf::VertexArray arr(sf::Points, xSize * ySize * multiplier * multiplier);
+void VRamScreen::update(uint8_t *buff) {
     int index = 0;
-    for (int x = 0; x < xSize; x++) {
-        for (int y = 0; y < ySize; y++) {
-            uint8_t val = buff[y * xSize + x];
+    for (int x = 0; x < x_size; x++) {
+        for (int y = 0; y < y_size; y++) {
+            uint8_t val = buff[y * x_size + x];
             for (int i = 0; i < multiplier * multiplier; i++) {
-                arr[index] = sf::Vector2f(60 + multiplier * x + i % multiplier,
-                                          100 + multiplier * y + i / multiplier);
+                arr[index] = sf::Vector2f(60 + multiplier * x + i % multiplier, 100 + multiplier * y + i / multiplier);
                 arr[index].color = sf::Color(val, val, val);
                 index += 1;
             }
         }
     }
-    window_->draw(arr);
+
 }

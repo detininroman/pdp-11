@@ -69,21 +69,21 @@ int main(int argc, char *argv[]) {
             if (event.type == sf::Event::MouseButtonPressed || event.type == sf::Event::MouseButtonReleased) {
                 sf::Vector2i position = sf::Mouse::getPosition(window);
                 for (auto button : buttons) {
-                    if (button->rect_.contains(position)) {
+                    if (button->rect.contains(position)) {
                         button->clickHandler();
                         break;
                     }
                 }
                 if (event.type == sf::Event::MouseButtonPressed) {
-                    if (start_button.rect_.contains(position)) {
+                    if (start_button.rect.contains(position)) {
                         state = PDPState::AUTO;
-                    } else if (step_button.rect_.contains(position)) {
+                    } else if (step_button.rect.contains(position)) {
                         state = PDPState::MANUAL;
-                    } else if (stop_button.rect_.contains(position)) {
+                    } else if (stop_button.rect.contains(position)) {
                         state = PDPState::STOPPED;
-                    } else if (execute_button.rect_.contains(position)) {
+                    } else if (execute_button.rect.contains(position)) {
                         state = PDPState::EXECUTE;
-                    } else if (reset_button.rect_.contains(position)) {
+                    } else if (reset_button.rect.contains(position)) {
                         state = PDPState::INACTIVE;
                         goto restart;
                     }
@@ -91,49 +91,33 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        window.clear(darkGray);
+        window.clear(dark_gray);
 
-        if (state == PDPState::AUTO) {
-            for (int i = 0; i < 32; i++) {
-                Error step_rv = Emulator::instance().step();
-                if (step_rv == Error::FINISHED) {
-                    state = PDPState::FINISHED;
-                    break;
+        Error step_rv;
+        switch (state) {
+            case PDPState::EXECUTE:
+                for (int i = 0; i < 256; i++) {
+                    step_rv = Emulator::instance().step();
+                    if (step_rv == Error::FINISHED) {
+                        state = PDPState::FINISHED;
+                        break;
+                    }
                 }
-            }
-        } else if (state == PDPState::EXECUTE) {
-            for (int i = 0; i < 512; i++) {
-                Error step_rv = Emulator::instance().step();
-                if (step_rv == Error::FINISHED) {
-                    state = PDPState::FINISHED;
-                    break;
-                }
-            }
-        } else if (state == PDPState::MANUAL) {
-            Error step_rv = Emulator::instance().step();
-            if (step_rv == Error::FINISHED) {
-                state = PDPState::FINISHED;
-            } else {
-                state = PDPState::STOPPED;
-            }
+                break;
+            case PDPState::AUTO:
+                step_rv = Emulator::instance().step();
+                state = (step_rv != Error::FINISHED) ? PDPState::AUTO : PDPState::FINISHED;
+                break;
+            case PDPState::MANUAL:
+                step_rv = Emulator::instance().step();
+                state = (step_rv != Error::FINISHED) ? PDPState::STOPPED : PDPState::FINISHED;
+                break;
+            default:
+                break;
         }
 
         Emulator::instance().getVideoMemory(buff, VIDEO_SIZE);
         BitArray screenBits(buff, VIDEO_SIZE);
-
-        /*
-        byteCodeScreen.update();
-        disAsmScreen.update();
-        vRam.update();
-         */
-
-        for (auto button : buttons) {
-            button->update();
-        }
-
-        for (auto button : buttons) {
-            button->draw();
-        }
 
         std::string asm_code;
         std::string byte_code;
@@ -143,9 +127,21 @@ int main(int argc, char *argv[]) {
             byte_code = vec2str(Emulator::instance().getByteCode(33));
         }
 
-        disasm_screen.draw(asm_code);
-        byte_code_screen.draw(byte_code);
-        vram_screen.draw(buff);
+        for (auto button : buttons) {
+            button->update();
+        }
+
+        disasm_screen.update(asm_code);
+        byte_code_screen.update(byte_code);
+        vram_screen.update(buff);
+
+        for (auto button : buttons) {
+            button->draw();
+        }
+
+        disasm_screen.draw();
+        byte_code_screen.draw();
+        vram_screen.draw();
 
 //        std::cout << states_map[state] << std::endl;
         window.display();
