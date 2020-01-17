@@ -20,7 +20,7 @@ public:
 
     Error add(PipelineStage device, int command_ticks);
 
-    Error step();
+    Error count();
 
 private:
     int tick;

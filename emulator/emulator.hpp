@@ -60,8 +60,7 @@ public:
 
     int getTicksNoPipe();
 
-    int getTicks();
-
+    void reset();
 
 private:
     ~Emulator();

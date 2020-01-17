@@ -31,6 +31,7 @@ void printROM(uint8_t *ROM) {
 
 int main() {
     Emulator::instance().initROM("../programs/white_screen");
+
     uint8_t *video = new uint8_t[VIDEO_SIZE];
     uint8_t *rom = new uint8_t[VIDEO_SIZE];
     Emulator::instance().getROM(rom, ROM_SIZE);

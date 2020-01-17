@@ -28,8 +28,11 @@ int Emulator::getTicksNoPipe() {
     return pipeline.getTicksNaive();
 }
 
-int Emulator::getTicks() {
-    return 1488;
+void Emulator::reset() { // call initROM After!
+    memory = Memory();
+    pipeline = Pipeline();
+    assembly.clear();
+    byteCode.clear();
 }
 
 Error Emulator::step() {
@@ -41,7 +44,8 @@ Error Emulator::step() {
     decode();
     loadOperands();
     execute();
-    pipeline.step();
+
+    pipeline.count();
     return Error::OK;
 }
 
