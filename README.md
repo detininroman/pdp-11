@@ -14,5 +14,5 @@ Ex: `./asm ../programs/white_screen.s white_screen`
 ### Authors
 - GUI - @detininroman 
 - Execution cycle, memory, simple pipeline - @pekashy
-- Commands, byte-code generator, example programs - @terana
+- Commands, bytecode generator, example programs - @terana
 - Overall Architecture - @FflushLife
