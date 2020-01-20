@@ -71,7 +71,7 @@ static std::vector<std::vector<std::string>> tokenizeFile(std::istream &input) {
 static Operand parseOperand(const std::string &op) {
     std::smatch match;
     Operand result;
-    for (int i = 0; i < kAddrModeRegex.size(); ++i) {
+    for (int i = 0; i < (int) kAddrModeRegex.size(); ++i) {
         if (std::regex_match(op, match, kAddrModeRegex[i])) {
             result.mode = i;
             break;
@@ -99,7 +99,7 @@ std::vector<uint16_t> Assembler::instructionToBinary(const std::vector<std::stri
 
     const Instruction &instr = kInstructions.at(instruction[0]);
 
-    if (instruction.size() != instr.operands + 1) {
+    if ((int) instruction.size() != instr.operands + 1) {
         throw std::runtime_error("Wrong operand count for " + instr.name);
     }
 

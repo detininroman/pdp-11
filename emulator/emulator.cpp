@@ -352,10 +352,11 @@ uint16_t *Emulator::pullOutAddress(uint8_t reg_num, uint8_t mode_num) {
         case AddressingMode::INDEX : {  // Contents of Reg + Following word is address
             if (memory.getWordAddress(*reg_pointer, &address) == Error::OK) {  // Obtaining contents of reg
                 uint16_t *address2 = nullptr;
-                if (memory.getWordAddress((*reg_pointer + 2), &address2) == Error::OK) {  // Following word
+                if (memory.getWordAddress(*memory.reg_table[7], &address2) == Error::OK) {  // Following word
                     uint16_t *output_address = nullptr;
                     if (memory.getWordAddress((*address + *address2), &output_address) ==
                         Error::OK) {  // By summ of addr
+                        *memory.reg_table[7] += 2;
                         return output_address;
                     } else {
                         return nullptr;  // Take care
@@ -369,12 +370,13 @@ uint16_t *Emulator::pullOutAddress(uint8_t reg_num, uint8_t mode_num) {
         case AddressingMode::INDEX_DEFERRED : {  // Contents of Reg + Following word is addr of addr
             if (memory.getWordAddress(*reg_pointer, &address) == Error::OK) {  // Obtaining contents of reg
                 uint16_t *address2 = nullptr;
-                if (memory.getWordAddress((*reg_pointer + 2), &address2) == Error::OK) {  // Following word
+                if (memory.getWordAddress(*memory.reg_table[7], &address2) == Error::OK) {  // Following word
                     uint16_t *address3 = nullptr;
                     if (memory.getWordAddress((*address + *address2), &address3) == Error::OK) {  // By summ of addr
                         uint16_t *output_address = nullptr;
                         if (memory.getWordAddress((*address + *address2), &output_address) ==
                             Error::OK) {  // Go to address
+                            *memory.reg_table[7] += 2;
                             return output_address;
                         } else {
                             return nullptr;  // Take care
