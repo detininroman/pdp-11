@@ -33,6 +33,7 @@ Error Pipeline::count() {
     bool finished = false;
     while (!finished) {
         finished = true;
+        time_opt++;
         for (auto &device : devices) { // iterating over all devices for pipelined execution
             if (current_timers[device]) { //device is busy
                 --current_timers[device];
@@ -44,7 +45,6 @@ Error Pipeline::count() {
             current_timers[device] = backlog[device].front(); // have something for device
             backlog[device].pop();
             finished = false;
-            time_opt++;
         }
     }
     return Error::OK;
