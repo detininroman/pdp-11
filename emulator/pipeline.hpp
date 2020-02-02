@@ -23,6 +23,7 @@ public:
     Error count();
 
 private:
+    // TODO: Add Lock/Unlock with cache memory.
     int tick;
     int time_naive;
     int time_opt;

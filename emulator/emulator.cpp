@@ -355,7 +355,7 @@ uint16_t *Emulator::pullOutAddress(uint8_t reg_num, uint8_t mode_num) {
                 if (memory.getWordAddress(*memory.reg_table[7], &address2) == Error::OK) {  // Following word
                     uint16_t *output_address = nullptr;
                     if (memory.getWordAddress((*address + *address2), &output_address) ==
-                        Error::OK) {  // By summ of addr
+                        Error::OK) {  // By sum of addr
                         *memory.reg_table[7] += 2;
                         return output_address;
                     } else {

@@ -28,21 +28,21 @@ Error Pipeline::add(PipelineStage device, int command_ticks) {
     return Error::OK;
 }
 
-
 Error Pipeline::count() {
     bool finished = false;
     while (!finished) {
         finished = true;
+
         time_opt++;
-        for (auto &device : devices) { // iterating over all devices for pipelined execution
-            if (current_timers[device]) { //device is busy
+        for (auto &device : devices) { // Iterating over all devices for pipelined execution
+            if (current_timers[device]) { // Device is busy
                 --current_timers[device];
                 continue;
             }
-            if (backlog[device].empty()) { // no commands for this device yet
+            if (backlog[device].empty()) {  // No commands for this device yet
                 continue;
             }
-            current_timers[device] = backlog[device].front(); // have something for device
+            current_timers[device] = backlog[device].front();  // Have something for device
             backlog[device].pop();
             finished = false;
         }
