@@ -13,7 +13,7 @@
 #include "error.hpp"
 #include "instructions/instructions.hpp"
 #include "memory/memory.hpp"
-#include "pipeline.hpp"
+#include "pipeline/pipeline.hpp"
 
 
 struct StateVariables {

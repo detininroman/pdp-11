@@ -3,7 +3,7 @@
 #include <map>
 #include <queue>
 
-#include "instructions/instructions.hpp"
+#include "../instructions/instructions.hpp"
 
 using std::vector;
 using std::pair;
